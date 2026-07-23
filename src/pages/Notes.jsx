@@ -1,8 +1,9 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Search, Clock, Tag, ArrowRight, BookOpen } from "lucide-react";
+import { Search, Clock, Tag, ArrowRight, BookOpen, Eye } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 import { useNotesData } from "../contexts/NotesDataContext.jsx";
+import { getViewCount } from "../hooks/useViewCount.js";
 
 export default function Notes() {
   const { t, lang } = useI18n();
@@ -118,6 +119,10 @@ export default function Notes() {
                       <span className="flex items-center gap-1 text-xs text-muted">
                         <Clock className="w-3 h-3" />
                         {note.readTime}
+                      </span>
+                      <span className="flex items-center gap-1 text-xs text-muted">
+                        <Eye className="w-3 h-3" />
+                        {getViewCount(note.slug)} {lang === "zh" ? "阅读" : "views"}
                       </span>
                       <time className="text-xs text-muted">{formatDate(note.date)}</time>
                     </div>

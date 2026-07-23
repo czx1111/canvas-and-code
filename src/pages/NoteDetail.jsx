@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Clock, Tag } from "lucide-react";
+import { ArrowLeft, Clock, Tag, Eye } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 import { useNotesData } from "../contexts/NotesDataContext.jsx";
+import { useViewCount } from "../hooks/useViewCount.js";
 import PostContent from "../components/PostContent.jsx";
 
 export default function NoteDetail() {
@@ -12,6 +13,7 @@ export default function NoteDetail() {
   const [copied, setCopied] = useState(false);
 
   const note = notes.find((n) => n.slug === slug);
+  const { count: viewCount } = useViewCount(note ? slug : null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -70,6 +72,10 @@ export default function NoteDetail() {
           <span className="flex items-center gap-1 text-xs text-muted">
             <Clock className="w-3 h-3" />
             {note.readTime}
+          </span>
+          <span className="flex items-center gap-1 text-xs text-muted">
+            <Eye className="w-3 h-3" />
+            {viewCount} {lang === "zh" ? "次阅读" : "views"}
           </span>
           <time className="text-xs text-muted">{formatDate(note.date)}</time>
         </div>
