@@ -1,10 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
 
 // These values are safe to expose in the frontend (protected by RLS policies).
-// The user needs to create a Supabase project and fill in these values,
-// or set them as Vite environment variables (VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY).
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "";
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
+// Defaults are used when env vars are not set (e.g. local dev without .env).
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "https://bwsoxnloendutloszvam.supabase.co";
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || "sb_publishable_IU9xBssI6XGzLMzk9wn34g_tO_mlreU";
 
 // If credentials are not configured, supabase will be null and the app
 // will gracefully fall back to localStorage-based view counting.
