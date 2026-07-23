@@ -8,6 +8,7 @@ export default function Footer() {
   const navLinks = [
     { to: "/", label: t("nav.home") },
     { to: "/blog", label: t("nav.blog") },
+    { to: "/notes", label: t("nav.notes") },
     { to: "/about", label: t("nav.about") },
   ];
 

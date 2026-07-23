@@ -4,6 +4,7 @@ export const translations = {
     nav: {
       home: "Home",
       blog: "Blog",
+      notes: "Notes",
       about: "About",
       source: "Source",
     },
@@ -86,6 +87,24 @@ export const translations = {
       copyCode: "Copy",
       copied: "Copied!",
     },
+    // Notes
+    notes: {
+      title: "Notes",
+      subtitle: "A collection of knowledge points, insights, and quick thoughts organized by topic.",
+      searchPlaceholder: "Search notes...",
+      all: "All",
+      noResults: "No notes found.",
+      noResultsDesc: "Try adjusting your search or filter.",
+      backToNotes: "Back to notes",
+      categories: {
+        Frontend: "Frontend",
+        Backend: "Backend",
+        Algorithm: "Algorithm",
+        Database: "Database",
+        Tools: "Tools",
+        Other: "Other",
+      },
+    },
     // Footer
     footer: {
       brand: "Canvas & Code",
@@ -110,6 +129,7 @@ export const translations = {
     nav: {
       home: "首页",
       blog: "博客",
+      notes: "随笔",
       about: "关于",
       source: "源码",
     },
@@ -191,6 +211,24 @@ export const translations = {
       selectFile: "从文件树中选择一个文件以查看其源代码",
       copyCode: "复制",
       copied: "已复制！",
+    },
+    // Notes
+    notes: {
+      title: "随笔",
+      subtitle: "知识点理解、灵感与快速思考的合集，按主题分类。",
+      searchPlaceholder: "搜索随笔...",
+      all: "全部",
+      noResults: "未找到随笔。",
+      noResultsDesc: "试试调整搜索或筛选条件。",
+      backToNotes: "返回随笔",
+      categories: {
+        Frontend: "前端",
+        Backend: "后端",
+        Algorithm: "算法",
+        Database: "数据库",
+        Tools: "工具",
+        Other: "其他",
+      },
     },
     // Footer
     footer: {

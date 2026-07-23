@@ -1,5 +1,6 @@
 node_modules
 dist
 src/generated/posts-data.js
+src/generated/notes-data.js
 *.local
 .DS_Store

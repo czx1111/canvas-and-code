@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Globe, House, BookOpen, User } from "lucide-react";
+import { Menu, X, Globe, House, BookOpen, User, NotebookPen } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 
 export default function Navbar() {
@@ -11,6 +11,7 @@ export default function Navbar() {
   const navLinks = [
     { to: "/", label: t("nav.home"), icon: House },
     { to: "/blog", label: t("nav.blog"), icon: BookOpen },
+    { to: "/notes", label: t("nav.notes"), icon: NotebookPen },
     { to: "/about", label: t("nav.about"), icon: User },
   ];
 

@@ -4,6 +4,7 @@ import { HashRouter } from "react-router-dom";
 import App from "./App.jsx";
 import { I18nProvider } from "./contexts/I18nContext.jsx";
 import { BlogDataProvider } from "./contexts/BlogDataContext.jsx";
+import { NotesDataProvider } from "./contexts/NotesDataContext.jsx";
 import "./styles/index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -11,7 +12,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <HashRouter>
       <I18nProvider>
         <BlogDataProvider>
-          <App />
+          <NotesDataProvider>
+            <App />
+          </NotesDataProvider>
         </BlogDataProvider>
       </I18nProvider>
     </HashRouter>
