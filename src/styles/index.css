@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-canvas text-body font-body antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display text-ink;
+  }
+  ::selection {
+    @apply bg-primary/20 text-ink;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply max-w-6xl mx-auto px-md md:px-lg lg:px-xl;
+  }
+  .container-narrow {
+    @apply max-w-3xl mx-auto px-md md:px-lg;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; opacity: 0; }
+  .animate-fade-in-up { animation: fadeInUp 0.5s ease-out forwards; opacity: 0; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #e6dfd8; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #cc785c; }

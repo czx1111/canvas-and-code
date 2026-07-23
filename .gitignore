@@ -1,0 +1,5 @@
+node_modules
+dist
+src/generated/posts-data.js
+*.local
+.DS_Store
