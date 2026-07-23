@@ -5,7 +5,7 @@ titleZh: "React Hooks 实战：我真正使用的模式"
 excerpt: "Beyond useState and useEffect — the hook patterns that solve real problems in production React applications."
 excerptZh: "超越 useState 和 useEffect——那些在生产级 React 应用中解决真实问题的 Hook 模式。"
 category: Engineering
-date: 2024-11-28
+date: 2026-07-23
 readTime: 7 min
 coverImage: ""
 featured: false

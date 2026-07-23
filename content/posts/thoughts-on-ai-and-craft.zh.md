@@ -3,7 +3,7 @@ slug: thoughts-on-ai-and-craft
 title: "关于 AI 与写作工艺的思考"
 excerpt: "AI 可以生成文字，但它能写作吗？关于创造力、工艺，以及有意识地组合文字意味着什么的思考。"
 category: Thoughts
-date: 2024-11-15
+date: 2026-07-23
 readTime: 5 分钟
 ---
 

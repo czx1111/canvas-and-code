@@ -2,7 +2,7 @@
 slug: linux-kernel-direct-mapping
 title: "Linux 内核直接映射区：虚拟地址到物理地址的 O(1) 转换"
 category: OS
-date: 2025-01-20
+date: 2026-07-23
 readTime: 3 min
 tags: [Linux, 操作系统, 虚拟内存, 内核空间, 页表]
 ---

@@ -3,7 +3,7 @@ slug: the-craft-of-simple-code
 title: "简洁代码的工艺"
 excerpt: "为什么最好的代码不是聪明的代码，以及如何抵制过度工程化你所构建的一切的诱惑。"
 category: Thoughts
-date: 2024-12-05
+date: 2026-07-23
 readTime: 5 分钟
 ---
 

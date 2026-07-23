@@ -2,7 +2,7 @@
 slug: git-rebase-vs-merge
 title: "Git Rebase vs Merge：什么时候用哪个"
 category: Tools
-date: 2025-01-05
+date: 2026-07-23
 readTime: 2 min
 tags: [Git, 协作, 版本控制]
 ---

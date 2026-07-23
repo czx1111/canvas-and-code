@@ -68,3 +68,75 @@ export async function fetchViewCounts(slugs) {
     return {};
   }
 }
+
+// ── Site-wide stats (visitors + total views) ────────────
+
+const VISITOR_KEY = "site-visitor-id";
+
+function getOrCreateVisitorId() {
+  try {
+    let id = localStorage.getItem(VISITOR_KEY);
+    if (!id) {
+      id = `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+      localStorage.setItem(VISITOR_KEY, id);
+    }
+    return id;
+  } catch {
+    return `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+  }
+}
+
+/**
+ * Register a site visit (unique per browser).
+ * Inserts a row into site_visits if this visitor hasn't been seen before.
+ *
+ * @returns {Promise<void>}
+ */
+export async function registerSiteVisit() {
+  if (!supabase) return;
+
+  try {
+    const visitorId = getOrCreateVisitorId();
+    await supabase.from("site_visits").upsert(
+      { visitor_id: visitorId },
+      { onConflict: "visitor_id" }
+    );
+  } catch (err) {
+    console.warn("[site-stats] Failed to register visit:", err.message);
+  }
+}
+
+/**
+ * Fetch total unique visitors and total page views.
+ *
+ * @returns {Promise<{ visitors: number, totalViews: number }>}
+ */
+export async function fetchSiteStats() {
+  if (!supabase) return { visitors: 0, totalViews: 0 };
+
+  try {
+    // Count unique visitors
+    const { count: visitors, error: vErr } = await supabase
+      .from("site_visits")
+      .select("*", { count: "exact", head: true });
+
+    if (vErr) console.warn("[site-stats] visitors error:", vErr.message);
+
+    // Sum total views from view_counts
+    const { data: vcData, error: vcErr } = await supabase
+      .from("view_counts")
+      .select("count");
+
+    let totalViews = 0;
+    if (vcErr) {
+      console.warn("[site-stats] views error:", vcErr.message);
+    } else if (vcData) {
+      totalViews = vcData.reduce((sum, row) => sum + (row.count || 0), 0);
+    }
+
+    return { visitors: visitors || 0, totalViews };
+  } catch (err) {
+    console.warn("[site-stats] Failed to fetch:", err.message);
+    return { visitors: 0, totalViews: 0 };
+  }
+}

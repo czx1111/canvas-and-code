@@ -2,7 +2,7 @@
 slug: http-cache-strategy
 title: "HTTP 缓存策略：强缓存与协商缓存"
 category: Backend
-date: 2024-12-25
+date: 2026-07-23
 readTime: 3 min
 tags: [HTTP, 缓存, 性能优化]
 ---

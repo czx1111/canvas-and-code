@@ -5,7 +5,7 @@ titleZh: "Web 排版：实用指南"
 excerpt: "From font loading to vertical rhythm — the typographic decisions that separate amateur sites from professional ones."
 excerptZh: "从字体加载到垂直节奏——那些区分业余网站与专业网站的排版决策。"
 category: Design
-date: 2024-11-20
+date: 2026-07-23
 readTime: 6 min
 coverImage: ""
 featured: false

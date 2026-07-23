@@ -2,6 +2,7 @@ node_modules
 dist
 src/generated/posts-data.js
 src/generated/notes-data.js
+src/generated/site-stats.js
 *.local
 .DS_Store
 .env

@@ -2,7 +2,7 @@
 slug: react-closure-trap
 title: "React Hooks 中的闭包陷阱"
 category: Frontend
-date: 2024-12-22
+date: 2026-07-23
 readTime: 4 min
 tags: [React, Hooks, 闭包]
 ---

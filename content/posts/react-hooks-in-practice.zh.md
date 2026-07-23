@@ -3,7 +3,7 @@ slug: react-hooks-in-practice
 title: "React Hooks 实战：我真正使用的模式"
 excerpt: "超越 useState 和 useEffect——那些在生产级 React 应用中解决真实问题的 Hook 模式。"
 category: Engineering
-date: 2024-11-28
+date: 2026-07-23
 readTime: 7 分钟
 ---
 

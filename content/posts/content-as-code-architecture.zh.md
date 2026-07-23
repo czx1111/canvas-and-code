@@ -3,7 +3,7 @@ slug: content-as-code-architecture
 title: "内容即代码：五层博客架构"
 excerpt: "如何将博客文章视为版本控制的 Markdown 文件，消除后端复杂性，同时保留完整的编辑控制。"
 category: Engineering
-date: 2024-12-10
+date: 2026-07-23
 readTime: 8 分钟
 ---
 
@@ -49,7 +49,7 @@ slug: my-first-post
 title: "我的第一篇文章"
 excerpt: "简短描述"
 category: Engineering
-date: 2024-12-01
+date: 2026-07-23
 readTime: 5 分钟
 ---
 ```

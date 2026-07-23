@@ -3,7 +3,7 @@ slug: typography-on-the-web
 title: "Web 排版：实用指南"
 excerpt: "从字体加载到垂直节奏——那些区分业余网站与专业网站的排版决策。"
 category: Design
-date: 2024-11-20
+date: 2026-07-23
 readTime: 6 分钟
 ---
 

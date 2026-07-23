@@ -2,7 +2,7 @@
 slug: memory-mapped-files
 title: "内存映射文件：为什么 mmap 比 read 快"
 category: OS
-date: 2025-01-15
+date: 2026-07-23
 readTime: 4 min
 tags: [操作系统, mmap, IO, 零拷贝]
 ---

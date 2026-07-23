@@ -1,5 +1,6 @@
 import { MapPin, Calendar, Coffee, Mail, Github, Twitter } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
+import SiteStats from "../components/SiteStats.jsx";
 
 export default function About() {
   const { t, lang } = useI18n();
@@ -94,6 +95,11 @@ export default function About() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Site Stats */}
+        <div className="mb-12">
+          <SiteStats />
         </div>
 
         {/* About This Blog */}

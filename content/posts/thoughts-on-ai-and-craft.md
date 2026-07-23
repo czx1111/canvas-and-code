@@ -5,7 +5,7 @@ titleZh: "关于 AI 与写作工艺的思考"
 excerpt: "AI can generate text, but can it write? A reflection on creativity, craft, and what it means to put words together with intention."
 excerptZh: "AI 可以生成文字，但它能写作吗？关于创造力、工艺，以及有意识地组合文字意味着什么的思考。"
 category: Thoughts
-date: 2024-11-15
+date: 2026-07-23
 readTime: 5 min
 coverImage: ""
 featured: false

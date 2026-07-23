@@ -2,7 +2,7 @@
 slug: js-event-loop
 title: "JavaScript 事件循环机制详解"
 category: Frontend
-date: 2024-12-20
+date: 2026-07-23
 readTime: 3 min
 tags: [JavaScript, 异步, Event Loop]
 ---

@@ -2,7 +2,7 @@
 slug: db-index-essentials
 title: "数据库索引的本质：B+ 树与最左前缀"
 category: Database
-date: 2024-12-28
+date: 2026-07-23
 readTime: 3 min
 tags: [MySQL, 索引, B+树, 性能优化]
 ---

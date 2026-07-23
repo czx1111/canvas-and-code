@@ -2,7 +2,7 @@
 slug: dp-thinking-model
 title: "动态规划的三步思维模型"
 category: Algorithm
-date: 2025-01-10
+date: 2026-07-23
 readTime: 3 min
 tags: [算法, 动态规划, DP]
 ---

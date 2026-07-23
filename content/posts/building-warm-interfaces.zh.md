@@ -3,7 +3,7 @@ slug: building-warm-interfaces
 title: "构建温暖的界面：来自编辑设计的启示"
 excerpt: "印刷编辑传统——温暖的纸张色调、衬线标题、宽裕的页边距——如何教会我们构建更人性化的数字界面。"
 category: Design
-date: 2024-12-15
+date: 2026-07-23
 readTime: 6 分钟
 ---
 
