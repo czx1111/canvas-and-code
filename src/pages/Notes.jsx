@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Search, Clock, Tag, ArrowRight, BookOpen, Eye } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 import { useNotesData } from "../contexts/NotesDataContext.jsx";
-import { getViewCount } from "../hooks/useViewCount.js";
+import { useViewCounts } from "../hooks/useViewCount.js";
 
 export default function Notes() {
   const { t, lang } = useI18n();
@@ -38,6 +38,10 @@ export default function Notes() {
       ? t(`notes.categories.${cat}`)
       : cat;
   };
+
+  // Batch fetch view counts for all notes
+  const allSlugs = useMemo(() => notes.map((n) => n.slug), [notes]);
+  const { counts: viewCounts } = useViewCounts(allSlugs);
 
   const formatDate = (dateStr) => {
     if (!dateStr) return "";
@@ -122,7 +126,7 @@ export default function Notes() {
                       </span>
                       <span className="flex items-center gap-1 text-xs text-muted">
                         <Eye className="w-3 h-3" />
-                        {getViewCount(note.slug)} {lang === "zh" ? "阅读" : "views"}
+                        {viewCounts[note.slug] || 0} {lang === "zh" ? "阅读" : "views"}
                       </span>
                       <time className="text-xs text-muted">{formatDate(note.date)}</time>
                     </div>
