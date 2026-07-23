@@ -72,10 +72,10 @@ export default function PostContent({ content }) {
                 </code>
               );
             }
-            return <code className={className}>{children}</code>;
+            return <code className="font-mono text-ink">{children}</code>;
           },
           pre: ({ children }) => (
-            <pre className="bg-surface-dark text-on-dark rounded-lg p-lg my-lg overflow-x-auto text-sm leading-relaxed font-mono border border-surface-dark-elevated">
+            <pre className="bg-surface-cream-strong text-ink rounded-lg p-lg my-lg overflow-x-auto text-sm leading-relaxed font-mono border border-hairline">
               {children}
             </pre>
           ),
