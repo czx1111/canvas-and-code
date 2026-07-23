@@ -22,7 +22,7 @@ export default function About() {
   ];
 
   const socialLinks = [
-    { icon: Github, href: "https://github.com", label: "GitHub" },
+    { icon: Github, href: "https://github.com/czx1111", label: "GitHub" },
     { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
     { icon: Mail, href: "mailto:hello@example.com", label: "Email" },
   ];

@@ -6,3 +6,4 @@ src/generated/site-stats.js
 *.local
 .DS_Store
 .env
+OPERATION_MANUAL.md

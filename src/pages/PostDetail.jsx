@@ -111,7 +111,7 @@ export default function PostDetail() {
             <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg hover:bg-surface-soft text-muted hover:text-primary transition-colors">
               <Twitter className="w-4 h-4" />
             </a>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg hover:bg-surface-soft text-muted hover:text-primary transition-colors">
+            <a href="https://github.com/czx1111" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg hover:bg-surface-soft text-muted hover:text-primary transition-colors">
               <Github className="w-4 h-4" />
             </a>
             <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg hover:bg-surface-soft text-muted hover:text-primary transition-colors">

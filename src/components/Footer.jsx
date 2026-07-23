@@ -56,6 +56,16 @@ export default function Footer() {
             <ul className="space-y-2">
               <li>
                 <a
+                  href="https://github.com/czx1111"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-muted hover:text-primary transition-colors"
+                >
+                  GitHub
+                </a>
+              </li>
+              <li>
+                <a
                   href="https://twitter.com"
                   target="_blank"
                   rel="noopener noreferrer"
