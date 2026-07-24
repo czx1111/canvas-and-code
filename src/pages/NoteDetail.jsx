@@ -5,6 +5,7 @@ import { useI18n } from "../contexts/I18nContext.jsx";
 import { useNotesData } from "../contexts/NotesDataContext.jsx";
 import { useViewCount } from "../hooks/useViewCount.js";
 import PostContent from "../components/PostContent.jsx";
+import TableOfContents from "../components/TableOfContents.jsx";
 
 export default function NoteDetail() {
   const { slug } = useParams();
@@ -52,7 +53,9 @@ export default function NoteDetail() {
   };
 
   return (
-    <article className="max-w-3xl mx-auto px-6 py-12">
+    <div className="max-w-5xl mx-auto px-6 py-12">
+      <div className="flex gap-10">
+      <article className="flex-1 min-w-0 max-w-3xl mx-auto xl:mx-0">
       {/* Back link */}
       <Link
         to="/notes"
@@ -97,6 +100,7 @@ export default function NoteDetail() {
       </header>
 
       {/* Content */}
+      <TableOfContents content={content} variant="mobile" />
       <PostContent content={content} />
 
       {/* Footer — back to notes */}
@@ -109,6 +113,11 @@ export default function NoteDetail() {
           {t("notes.backToNotes")}
         </Link>
       </footer>
-    </article>
+      </article>
+      <aside className="hidden xl:block w-48 flex-shrink-0">
+        <TableOfContents content={content} variant="desktop" />
+      </aside>
+      </div>
+    </div>
   );
 }

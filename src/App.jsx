@@ -7,6 +7,7 @@ import PostDetail from "./pages/PostDetail.jsx";
 import Notes from "./pages/Notes.jsx";
 import NoteDetail from "./pages/NoteDetail.jsx";
 import About from "./pages/About.jsx";
+import NotFound from "./pages/NotFound.jsx";
 export default function App() {
   return (
     <div className="min-h-screen flex flex-col bg-canvas">
@@ -19,6 +20,7 @@ export default function App() {
           <Route path="/notes" element={<Notes />} />
           <Route path="/note/:slug" element={<NoteDetail />} />
           <Route path="/about" element={<About />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       <Footer />

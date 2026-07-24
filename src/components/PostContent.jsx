@@ -2,6 +2,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import { Link } from "react-router-dom";
+import { slugify, extractTextFromChildren } from "../lib/toc.js";
 
 export default function PostContent({ content }) {
   if (!content) return null;
@@ -17,16 +18,22 @@ export default function PostContent({ content }) {
               {children}
             </h1>
           ),
-          h2: ({ children }) => (
-            <h2 className="font-display text-2xl md:text-3xl font-semibold text-ink mt-xl mb-md leading-tight">
-              {children}
-            </h2>
-          ),
-          h3: ({ children }) => (
-            <h3 className="font-display text-xl md:text-2xl font-semibold text-ink mt-lg mb-sm leading-tight">
-              {children}
-            </h3>
-          ),
+          h2: ({ children }) => {
+            const id = slugify(extractTextFromChildren(children));
+            return (
+              <h2 id={id} className="font-display text-2xl md:text-3xl font-semibold text-ink mt-xl mb-md leading-tight scroll-mt-20">
+                {children}
+              </h2>
+            );
+          },
+          h3: ({ children }) => {
+            const id = slugify(extractTextFromChildren(children));
+            return (
+              <h3 id={id} className="font-display text-xl md:text-2xl font-semibold text-ink mt-lg mb-sm leading-tight scroll-mt-20">
+                {children}
+              </h3>
+            );
+          },
           h4: ({ children }) => (
             <h4 className="font-display text-lg font-semibold text-ink mt-md mb-xs leading-tight">
               {children}

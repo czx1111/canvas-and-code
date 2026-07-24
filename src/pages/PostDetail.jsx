@@ -4,6 +4,7 @@ import { ArrowLeft, Clock, Tag, Share2, Check, Twitter, Github, Linkedin } from 
 import { useI18n } from "../contexts/I18nContext.jsx";
 import { useBlogData } from "../contexts/BlogDataContext.jsx";
 import PostContent from "../components/PostContent.jsx";
+import TableOfContents from "../components/TableOfContents.jsx";
 
 export default function PostDetail() {
   const { slug } = useParams();
@@ -42,7 +43,9 @@ export default function PostDetail() {
   };
 
   return (
-    <article className="max-w-3xl mx-auto px-6 py-12">
+    <div className="max-w-5xl mx-auto px-6 py-12">
+      <div className="flex gap-10">
+      <article className="flex-1 min-w-0 max-w-3xl mx-auto xl:mx-0">
       {/* Back link */}
       <Link
         to="/blog"
@@ -92,6 +95,7 @@ export default function PostDetail() {
       )}
 
       {/* Content */}
+      <TableOfContents content={content} variant="mobile" />
       <PostContent content={content} />
 
       {/* Footer */}
@@ -137,6 +141,11 @@ export default function PostDetail() {
           </div>
         </div>
       </footer>
-    </article>
+      </article>
+      <aside className="hidden xl:block w-48 flex-shrink-0">
+        <TableOfContents content={content} variant="desktop" />
+      </aside>
+      </div>
+    </div>
   );
 }

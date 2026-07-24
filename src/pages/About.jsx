@@ -12,15 +12,6 @@ export default function About() {
     { icon: Mail, label: lang === "zh" ? "邮箱" : "Email", value: "hello@example.com", href: "mailto:hello@example.com" },
   ];
 
-  const colophon = [
-    { label: "Framework", value: "React + Vite" },
-    { label: "Styling", value: "Tailwind CSS" },
-    { label: lang === "zh" ? "标题字体" : "Display Font", value: "Playfair Display" },
-    { label: lang === "zh" ? "正文字体" : "Body Font", value: "Inter" },
-    { label: lang === "zh" ? "代码字体" : "Code Font", value: "JetBrains Mono" },
-    { label: "Hosting", value: "GitHub Pages" },
-  ];
-
   const socialLinks = [
     { icon: Github, href: "https://github.com/czx1111", label: "GitHub" },
     { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
@@ -114,21 +105,6 @@ export default function About() {
             </p>
             <p>{t("about.blogP2")}</p>
             <p>{t("about.blogP3")}</p>
-          </div>
-        </div>
-
-        {/* Colophon */}
-        <div className="rounded-xl border border-hairline bg-surface-dark p-6 mb-12">
-          <h3 className="text-sm font-medium text-on-dark uppercase tracking-wider mb-4">
-            {t("about.colophonTitle")}
-          </h3>
-          <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
-            {colophon.map((item) => (
-              <div key={item.label} className="contents">
-                <span className="text-on-dark/50">{item.label}</span>
-                <span className="text-on-dark/85">{item.value}</span>
-              </div>
-            ))}
           </div>
         </div>
 
