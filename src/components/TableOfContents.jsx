@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { List, ChevronDown } from "lucide-react";
 import { extractHeadings } from "../lib/toc.js";
+import { useI18n } from "../contexts/I18nContext.jsx";
 
 /**
  * TableOfContents — sticky sidebar TOC (desktop)
@@ -11,6 +12,7 @@ import { extractHeadings } from "../lib/toc.js";
  * current section via IntersectionObserver.
  */
 export default function TableOfContents({ content, variant }) {
+  const { t } = useI18n();
   const [activeId, setActiveId] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -64,7 +66,7 @@ export default function TableOfContents({ content, variant }) {
         >
           <span className="flex items-center gap-1.5">
             <List className="w-4 h-4 text-primary" />
-            目录
+            {t("common.toc")}
           </span>
           <ChevronDown
             className={`w-4 h-4 text-muted transition-transform ${mobileOpen ? "rotate-180" : ""}`}
@@ -104,7 +106,7 @@ export default function TableOfContents({ content, variant }) {
       <div className="rounded-xl border border-hairline bg-surface-soft/40 p-4">
         <p className="flex items-center gap-1.5 text-xs font-semibold text-muted uppercase tracking-wider mb-3 pb-3 border-b border-hairline">
           <List className="w-3.5 h-3.5" />
-          目录
+          {t("common.toc")}
         </p>
         <nav className="max-h-[calc(100vh-16rem)] overflow-y-auto pr-1">
           <ul className="space-y-0.5">

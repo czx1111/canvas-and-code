@@ -76,7 +76,7 @@ export default function Notes() {
                 onClick={() => setActiveCategory(cat)}
                 className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                   activeCategory === cat
-                    ? "bg-white text-primary shadow-sm"
+                    ? "bg-canvas text-primary shadow-sm"
                     : "text-muted hover:text-ink"
                 }`}
               >
@@ -91,7 +91,7 @@ export default function Notes() {
               placeholder={t("notes.searchPlaceholder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 pr-4 py-2 rounded-lg border border-hairline bg-white text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary w-64"
+              className="pl-9 pr-4 py-2 rounded-lg border border-hairline bg-surface-soft text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary w-64"
             />
           </div>
         </div>

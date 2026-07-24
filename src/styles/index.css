@@ -2,19 +2,79 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Color System: CSS Variables ────────────────────────── */
+/* Light mode (default) */
+:root {
+  color-scheme: light;
+  --color-primary: #cc785c;
+  --color-primary-active: #a9583e;
+  --color-primary-disabled: #e6dfd8;
+
+  --color-ink: #141413;
+  --color-body: #3d3d3a;
+  --color-body-strong: #252523;
+  --color-muted: #6c6a64;
+  --color-muted-soft: #8e8b82;
+
+  --color-hairline: #e6dfd8;
+  --color-hairline-soft: #ebe6df;
+
+  --color-canvas: #faf9f5;
+  --color-surface-soft: #f5f0e8;
+  --color-surface-card: #efe9de;
+
+  --color-scrollbar-thumb: #e6dfd8;
+  --color-scrollbar-hover: #cc785c;
+
+  --color-code-bg: #f5f0e8;
+  --color-code-text: #141413;
+}
+
+/* Dark mode */
+.dark {
+  color-scheme: dark;
+  --color-primary: #d4886e;
+  --color-primary-active: #e09a82;
+  --color-primary-disabled: #3a3733;
+
+  --color-ink: #f0ede5;
+  --color-body: #c4c0b8;
+  --color-body-strong: #e8e4dc;
+  --color-muted: #9a978f;
+  --color-muted-soft: #6c6a64;
+
+  --color-hairline: #3a3733;
+  --color-hairline-soft: #2f2c28;
+
+  --color-canvas: #1a1916;
+  --color-surface-soft: #252320;
+  --color-surface-card: #2f2c28;
+
+  --color-scrollbar-thumb: #3a3733;
+  --color-scrollbar-hover: #d4886e;
+
+  --color-code-bg: #1f1e1b;
+  --color-code-text: #e8e4dc;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-canvas text-body font-body antialiased;
+    @apply font-body antialiased;
+    background-color: var(--color-canvas);
+    color: var(--color-body);
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display text-ink;
+    @apply font-display;
+    color: var(--color-ink);
   }
   ::selection {
-    @apply bg-primary/20 text-ink;
+    background-color: color-mix(in srgb, var(--color-primary) 25%, transparent);
+    color: var(--color-ink);
   }
 }
 
@@ -45,5 +105,69 @@
 /* Scrollbar */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #e6dfd8; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #cc785c; }
+::-webkit-scrollbar-thumb { background: var(--color-scrollbar-thumb); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-scrollbar-hover); }
+
+/* ── highlight.js: Light mode (warm theme) ──────────────── */
+.hljs {
+  background: var(--color-code-bg);
+  color: var(--color-code-text);
+}
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-built_in,
+.hljs-name,
+.hljs-tag { color: #a9583e; }
+.hljs-string,
+.hljs-title,
+.hljs-section,
+.hljs-attribute,
+.hljs-literal,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-type,
+.hljs-addition { color: #2f8f7f; }
+.hljs-comment,
+.hljs-quote,
+.hljs-deletion,
+.hljs-meta { color: #8e8b82; font-style: italic; }
+.hljs-number,
+.hljs-variable,
+.hljs-attr,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-params { color: #c4872e; }
+.hljs-function .hljs-title,
+.hljs-title.function_ { color: #6c5ce7; }
+
+/* ── highlight.js: Dark mode overrides ──────────────────── */
+.dark .hljs {
+  background: var(--color-code-bg) !important;
+  color: var(--color-code-text) !important;
+}
+.dark .hljs-keyword,
+.dark .hljs-selector-tag,
+.dark .hljs-built_in,
+.dark .hljs-name,
+.dark .hljs-tag { color: #d4886e !important; }
+.dark .hljs-string,
+.dark .hljs-title,
+.dark .hljs-section,
+.dark .hljs-attribute,
+.dark .hljs-literal,
+.dark .hljs-template-tag,
+.dark .hljs-template-variable,
+.dark .hljs-type,
+.dark .hljs-addition { color: #5db8a6 !important; }
+.dark .hljs-comment,
+.dark .hljs-quote,
+.dark .hljs-deletion,
+.dark .hljs-meta { color: #6c6a64 !important; }
+.dark .hljs-number,
+.dark .hljs-variable,
+.dark .hljs-attr,
+.dark .hljs-symbol,
+.dark .hljs-bullet,
+.dark .hljs-params { color: #e8a55a !important; }
+.dark .hljs-function .hljs-title,
+.dark .hljs-title.function_ { color: #a29bfe !important; }

@@ -72,7 +72,7 @@ export default function SiteStats() {
         {stats.map((item) => (
           <div
             key={item.label}
-            className="flex items-center gap-3 p-3 rounded-lg bg-white/60 border border-hairline/50"
+            className="flex items-center gap-3 p-3 rounded-lg bg-surface-soft/60 border border-hairline/50"
           >
             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
               <item.icon className="w-4 h-4 text-primary" />

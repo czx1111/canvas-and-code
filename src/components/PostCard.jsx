@@ -24,15 +24,23 @@ export default function PostCard({ post, delay = 0 }) {
       >
         {/* Cover — fixed height */}
         <div className="relative overflow-hidden h-48 flex-shrink-0">
-          <img
-            src={post.coverImage}
-            alt={title}
-            loading="lazy"
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
+          {post.coverImage ? (
+            <img
+              src={post.coverImage}
+              alt={title}
+              loading="lazy"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-primary/20 via-accent-teal/10 to-accent-amber/15 flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
+              <span className="font-display text-5xl text-primary/30 select-none">
+                {title.charAt(0).toUpperCase()}
+              </span>
+            </div>
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
           <div className="absolute top-4 left-4">
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-sm text-xs font-medium text-ink">
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-canvas/90 backdrop-blur-sm text-xs font-medium text-ink">
               <Tag className="w-3 h-3" />
               {categoryLabel}
             </span>

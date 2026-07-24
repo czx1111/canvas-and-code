@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,jsx,ts,tsx}",
@@ -8,27 +9,27 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#cc785c",
-          active: "#a9583e",
-          disabled: "#e6dfd8",
+          DEFAULT: "var(--color-primary)",
+          active: "var(--color-primary-active)",
+          disabled: "var(--color-primary-disabled)",
         },
-        ink: "#141413",
+        ink: "var(--color-ink)",
         body: {
-          DEFAULT: "#3d3d3a",
-          strong: "#252523",
+          DEFAULT: "var(--color-body)",
+          strong: "var(--color-body-strong)",
         },
         muted: {
-          DEFAULT: "#6c6a64",
-          soft: "#8e8b82",
+          DEFAULT: "var(--color-muted)",
+          soft: "var(--color-muted-soft)",
         },
         hairline: {
-          DEFAULT: "#e6dfd8",
-          soft: "#ebe6df",
+          DEFAULT: "var(--color-hairline)",
+          soft: "var(--color-hairline-soft)",
         },
-        canvas: "#faf9f5",
+        canvas: "var(--color-canvas)",
         surface: {
-          soft: "#f5f0e8",
-          card: "#efe9de",
+          soft: "var(--color-surface-soft)",
+          card: "var(--color-surface-card)",
           "cream-strong": "#e8e0d2",
           dark: "#181715",
           "dark-elevated": "#252320",

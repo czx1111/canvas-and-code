@@ -5,6 +5,8 @@ import { useI18n } from "../contexts/I18nContext.jsx";
 import { useBlogData } from "../contexts/BlogDataContext.jsx";
 import PostContent from "../components/PostContent.jsx";
 import TableOfContents from "../components/TableOfContents.jsx";
+import ReadingProgress from "../components/ReadingProgress.jsx";
+import PostNav from "../components/PostNav.jsx";
 
 export default function PostDetail() {
   const { slug } = useParams();
@@ -13,6 +15,9 @@ export default function PostDetail() {
   const [copied, setCopied] = useState(false);
 
   const post = posts.find((p) => p.slug === slug);
+  const currentIndex = posts.findIndex((p) => p.slug === slug);
+  const prevPost = currentIndex > 0 ? posts[currentIndex - 1] : null;
+  const nextPost = currentIndex >= 0 && currentIndex < posts.length - 1 ? posts[currentIndex + 1] : null;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -44,6 +49,7 @@ export default function PostDetail() {
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
+      <ReadingProgress />
       <div className="flex gap-10">
       <article className="flex-1 min-w-0 max-w-3xl mx-auto xl:mx-0">
       {/* Back link */}
@@ -77,7 +83,7 @@ export default function PostDetail() {
             </div>
             <div>
               <p className="text-sm font-medium text-ink">{lang === "zh" ? "作者" : "Author"}</p>
-              <time className="text-xs text-muted">{post.date}</time>
+              <time className="text-xs text-muted">{formatDate(post.date)}</time>
             </div>
           </div>
         </div>
@@ -141,6 +147,11 @@ export default function PostDetail() {
           </div>
         </div>
       </footer>
+
+      {/* Prev / Next */}
+      <div className="mt-8">
+        <PostNav prev={prevPost} next={nextPost} />
+      </div>
       </article>
       <aside className="hidden xl:block w-56 flex-shrink-0">
         <TableOfContents content={content} variant="desktop" />

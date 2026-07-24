@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { HashRouter } from "react-router-dom";
 import App from "./App.jsx";
+import { ThemeProvider } from "./contexts/ThemeContext.jsx";
 import { I18nProvider } from "./contexts/I18nContext.jsx";
 import { BlogDataProvider } from "./contexts/BlogDataContext.jsx";
 import { NotesDataProvider } from "./contexts/NotesDataContext.jsx";
@@ -10,13 +11,15 @@ import "./styles/index.css";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <HashRouter>
-      <I18nProvider>
-        <BlogDataProvider>
-          <NotesDataProvider>
-            <App />
-          </NotesDataProvider>
-        </BlogDataProvider>
-      </I18nProvider>
+      <ThemeProvider>
+        <I18nProvider>
+          <BlogDataProvider>
+            <NotesDataProvider>
+              <App />
+            </NotesDataProvider>
+          </BlogDataProvider>
+        </I18nProvider>
+      </ThemeProvider>
     </HashRouter>
   </React.StrictMode>
 );

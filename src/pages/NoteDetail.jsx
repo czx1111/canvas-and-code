@@ -6,6 +6,8 @@ import { useNotesData } from "../contexts/NotesDataContext.jsx";
 import { useViewCount } from "../hooks/useViewCount.js";
 import PostContent from "../components/PostContent.jsx";
 import TableOfContents from "../components/TableOfContents.jsx";
+import ReadingProgress from "../components/ReadingProgress.jsx";
+import PostNav from "../components/PostNav.jsx";
 
 export default function NoteDetail() {
   const { slug } = useParams();
@@ -14,6 +16,9 @@ export default function NoteDetail() {
   const [copied, setCopied] = useState(false);
 
   const note = notes.find((n) => n.slug === slug);
+  const currentIndex = notes.findIndex((n) => n.slug === slug);
+  const prevNote = currentIndex > 0 ? notes[currentIndex - 1] : null;
+  const nextNote = currentIndex >= 0 && currentIndex < notes.length - 1 ? notes[currentIndex + 1] : null;
   const { count: viewCount } = useViewCount(note ? slug : null);
 
   useEffect(() => {
@@ -54,6 +59,7 @@ export default function NoteDetail() {
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
+      <ReadingProgress />
       <div className="flex gap-10">
       <article className="flex-1 min-w-0 max-w-3xl mx-auto xl:mx-0">
       {/* Back link */}
@@ -113,6 +119,11 @@ export default function NoteDetail() {
           {t("notes.backToNotes")}
         </Link>
       </footer>
+
+      {/* Prev / Next */}
+      <div className="mt-8">
+        <PostNav prev={prevNote} next={nextNote} basePath="/note" />
+      </div>
       </article>
       <aside className="hidden xl:block w-56 flex-shrink-0">
         <TableOfContents content={content} variant="desktop" />

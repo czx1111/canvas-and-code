@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Globe, House, BookOpen, User, NotebookPen } from "lucide-react";
+import { Menu, X, Globe, House, BookOpen, User, NotebookPen, Sun, Moon } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
+import { useTheme } from "../contexts/ThemeContext.jsx";
 
 export default function Navbar() {
   const { t, lang, toggleLang } = useI18n();
+  const { theme, toggleTheme } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
 
@@ -47,6 +49,14 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+          {/* Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors border border-transparent text-body hover:bg-surface-soft hover:text-ink"
+            title={theme === "dark" ? (lang === "zh" ? "切换到亮色" : "Switch to light") : (lang === "zh" ? "切换到暗色" : "Switch to dark")}
+          >
+            {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </button>
           {/* Language Switcher */}
           <button
             onClick={toggleLang}
@@ -59,6 +69,12 @@ export default function Navbar() {
 
         {/* Mobile */}
         <div className="flex items-center gap-1 md:hidden">
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-lg text-body hover:bg-surface-soft"
+          >
+            {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </button>
           <button
             onClick={toggleLang}
             className="p-2 rounded-lg text-body hover:bg-surface-soft flex items-center gap-1"

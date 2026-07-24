@@ -125,7 +125,7 @@ export default function About() {
                 href={link.href}
                 target={link.href.startsWith("http") ? "_blank" : undefined}
                 rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-hairline bg-white text-sm font-medium text-ink hover:border-primary hover:text-primary transition-colors"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-hairline bg-surface-soft text-sm font-medium text-ink hover:border-primary hover:text-primary transition-colors"
               >
                 <link.icon className="w-4 h-4" />
                 {link.label}

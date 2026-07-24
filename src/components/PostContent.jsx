@@ -1,8 +1,44 @@
+import { useState, useRef, useCallback } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
+import rehypeHighlight from "rehype-highlight";
 import { Link } from "react-router-dom";
 import { slugify, extractTextFromChildren } from "../lib/toc.js";
+import { Check, Copy } from "lucide-react";
+
+/** CodeBlock — wraps <pre> with a copy-to-clipboard button */
+function CodeBlock({ children }) {
+  const [copied, setCopied] = useState(false);
+  const preRef = useRef(null);
+
+  const handleCopy = useCallback(() => {
+    const text = preRef.current?.textContent || "";
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }, []);
+
+  return (
+    <div className="relative group my-lg">
+      <button
+        onClick={handleCopy}
+        className="absolute top-3 right-3 p-1.5 rounded-md bg-surface-card/80 backdrop-blur-sm text-muted hover:text-primary transition-all opacity-0 group-hover:opacity-100 z-10"
+        title="Copy code"
+      >
+        {copied ? <Check className="w-3.5 h-3.5 text-success" /> : <Copy className="w-3.5 h-3.5" />}
+      </button>
+      <pre
+        ref={preRef}
+        className="border-l-4 border-primary/30 rounded-r-md p-lg overflow-x-auto text-sm leading-relaxed font-mono"
+        style={{ backgroundColor: "var(--color-code-bg)", color: "var(--color-code-text)" }}
+      >
+        {children}
+      </pre>
+    </div>
+  );
+}
 
 export default function PostContent({ content }) {
   if (!content) return null;
@@ -11,7 +47,7 @@ export default function PostContent({ content }) {
     <div className="post-content">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeRaw]}
+        rehypePlugins={[rehypeRaw, [rehypeHighlight, { detect: true, ignoreMissing: true }]]}
         components={{
           h1: ({ children }) => (
             <h1 className="font-display text-3xl md:text-4xl font-bold text-ink mt-2xl mb-lg leading-tight">
@@ -79,12 +115,10 @@ export default function PostContent({ content }) {
                 </code>
               );
             }
-            return <code className="font-mono text-ink">{children}</code>;
+            return <code className={`font-mono ${className || ""}`}>{children}</code>;
           },
           pre: ({ children }) => (
-            <pre className="border-l-4 border-primary/30 bg-surface-soft text-ink rounded-r-md p-lg my-lg overflow-x-auto text-sm leading-relaxed font-mono">
-              {children}
-            </pre>
+            <CodeBlock>{children}</CodeBlock>
           ),
           img: ({ src, alt }) => (
             <img

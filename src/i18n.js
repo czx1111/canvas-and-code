@@ -49,6 +49,8 @@ export const translations = {
       share: "Share",
       shareCopied: "Link copied!",
       writtenBy: "Written by",
+      prevPost: "Previous",
+      nextPost: "Next",
     },
     // About
     about: {
@@ -119,6 +121,7 @@ export const translations = {
     // Common
     common: {
       minRead: "min read",
+      toc: "Contents",
       categories: {
         Engineering: "Engineering",
         Design: "Design",
@@ -176,6 +179,8 @@ export const translations = {
       share: "分享",
       shareCopied: "链接已复制！",
       writtenBy: "作者",
+      prevPost: "上一篇",
+      nextPost: "下一篇",
     },
     // About
     about: {
@@ -246,6 +251,7 @@ export const translations = {
     // Common
     common: {
       minRead: "分钟阅读",
+      toc: "目录",
       categories: {
         Engineering: "工程",
         Design: "设计",

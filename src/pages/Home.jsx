@@ -101,14 +101,22 @@ export default function Home() {
             className="group block rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/8 hover:-translate-y-0.5 bg-surface-soft border border-hairline"
           >
             <div className="relative overflow-hidden h-64">
-              <img
-                src={featured.coverImage}
-                alt={ft.title}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
+              {featured.coverImage ? (
+                <img
+                  src={featured.coverImage}
+                  alt={ft.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-primary/20 via-accent-teal/10 to-accent-amber/15 flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
+                  <span className="font-display text-6xl text-primary/30 select-none">
+                    {ft.title.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
               <div className="absolute top-4 left-4">
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-sm text-xs font-medium text-ink">
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-canvas/90 backdrop-blur-sm text-xs font-medium text-ink">
                   <Tag className="w-3 h-3" />
                   {t(`common.categories.${featured.category}`)}
                 </span>
