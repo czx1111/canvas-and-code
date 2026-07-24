@@ -344,3 +344,12 @@
 .tk-pagination .el-pager li.active {
   color: var(--color-primary) !important;
 }
+
+/* QQ 号提示文字 */
+.tk-qq-hint {
+  font-size: 12px;
+  color: var(--color-muted) !important;
+  margin-top: 4px;
+  padding: 0 4px;
+  line-height: 1.4;
+}
