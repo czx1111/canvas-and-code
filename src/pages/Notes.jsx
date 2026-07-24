@@ -12,7 +12,7 @@ export default function Notes() {
   const [searchQuery, setSearchQuery] = useState("");
 
   // Build category list: ["All", ...from data, ...custom if missing]
-  const customCats = ["Frontend", "Backend", "Algorithm", "Database", "Tools", "OS", "Other"];
+  const customCats = ["Frontend", "Backend", "Algorithm", "Database", "Network", "Tools", "OS", "Other"];
   const allCats = ["All", ...new Set([...noteCategories, ...customCats])];
 
   const filtered = useMemo(() => {
