@@ -26,7 +26,7 @@ export default function Comments() {
     if (!envId || !containerRef.current) return;
 
     let cancelled = false;
-    let observer = null;
+    let customizeInterval = null;
     setError(null);
 
     const initTwikoo = async () => {
@@ -153,19 +153,10 @@ export default function Comments() {
           }
         };
 
-        // 首次定制（等待 Twikoo 渲染完成）
-        setTimeout(customizeTwikoo, 300);
-
-        // 监听 Twikoo 重新渲染，重新应用定制
-        let debounceTimer = null;
-        observer = new MutationObserver(() => {
-          if (debounceTimer) clearTimeout(debounceTimer);
-          debounceTimer = setTimeout(customizeTwikoo, 100);
-        });
-        observer.observe(containerRef.current, {
-          childList: true,
-          subtree: true,
-        });
+        // 使用 setInterval 轮询定制：Twikoo 表单渲染需要数秒（需调后端 API），
+        // MutationObserver 的 debounce 会被频繁的 DOM 变动反复重置导致永不触发。
+        // customizeTwikoo 内部会跳过已完成的定制，所以高频调用是安全的。
+        customizeInterval = setInterval(customizeTwikoo, 500);
       } catch (err) {
         setError(err.message || String(err));
       }
@@ -175,7 +166,7 @@ export default function Comments() {
 
     return () => {
       cancelled = true;
-      if (observer) observer.disconnect();
+      if (customizeInterval) clearInterval(customizeInterval);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [envId, lang, theme, location.pathname]);
