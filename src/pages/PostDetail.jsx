@@ -142,7 +142,7 @@ export default function PostDetail() {
         </div>
       </footer>
       </article>
-      <aside className="hidden xl:block w-48 flex-shrink-0">
+      <aside className="hidden xl:block w-56 flex-shrink-0">
         <TableOfContents content={content} variant="desktop" />
       </aside>
       </div>

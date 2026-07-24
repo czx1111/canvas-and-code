@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { List } from "lucide-react";
+import { List, ChevronDown } from "lucide-react";
 import { extractHeadings } from "../lib/toc.js";
 
 /**
- * TableOfContents — floating sticky sidebar TOC (desktop)
+ * TableOfContents — sticky sidebar TOC (desktop)
  * + collapsible block (mobile). Pass variant="mobile" or
  * variant="desktop" to render only one mode.
  *
@@ -41,7 +41,6 @@ export default function TableOfContents({ content, variant }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [headingIds]);
 
-  // Don't render TOC for short articles
   if (headings.length < 3) return null;
 
   const handleClick = (e, id) => {
@@ -55,26 +54,6 @@ export default function TableOfContents({ content, variant }) {
     setMobileOpen(false);
   };
 
-  const tocList = (
-    <ul className="space-y-1 border-l border-hairline">
-      {headings.map((h) => (
-        <li key={h.id} className={h.level === 3 ? "ml-3" : ""}>
-          <a
-            href={`#${h.id}`}
-            onClick={(e) => handleClick(e, h.id)}
-            className={`block pl-3 -ml-px text-sm leading-relaxed border-l border-transparent transition-colors ${
-              activeId === h.id
-                ? "border-primary text-primary font-medium"
-                : "text-muted hover:text-ink"
-            }`}
-          >
-            {h.text}
-          </a>
-        </li>
-      ))}
-    </ul>
-  );
-
   // ── Mobile: collapsible block ──────────────────────
   if (variant === "mobile") {
     return (
@@ -87,11 +66,29 @@ export default function TableOfContents({ content, variant }) {
             <List className="w-4 h-4 text-primary" />
             目录
           </span>
-          <span className="text-muted text-xs">{headings.length} 节</span>
+          <ChevronDown
+            className={`w-4 h-4 text-muted transition-transform ${mobileOpen ? "rotate-180" : ""}`}
+          />
         </button>
         {mobileOpen && (
           <div className="mt-3 px-4 py-3 rounded-lg border border-hairline bg-surface-soft/30">
-            {tocList}
+            <ul className="space-y-0.5">
+              {headings.map((h) => (
+                <li key={h.id} className={h.level === 3 ? "ml-4" : ""}>
+                  <a
+                    href={`#${h.id}`}
+                    onClick={(e) => handleClick(e, h.id)}
+                    className={`block px-2.5 py-1.5 rounded-md text-sm leading-snug transition-colors ${
+                      activeId === h.id
+                        ? "bg-primary/10 text-primary font-medium"
+                        : "text-muted hover:text-ink hover:bg-surface-soft"
+                    }`}
+                  >
+                    {h.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
       </div>
@@ -99,15 +96,34 @@ export default function TableOfContents({ content, variant }) {
   }
 
   // ── Desktop: sticky sidebar ────────────────────────
+  // NOTE: sticky must be a direct child of the flex <aside>
+  // (which stretches to full article height via align-items:stretch).
+  // An extra wrapper div with height:auto would zero the sticky range.
   return (
-    <div className="hidden xl:block">
-      <div className="sticky top-20">
-        <p className="flex items-center gap-1.5 text-xs font-semibold text-muted uppercase tracking-wider mb-3">
+    <div className="sticky top-20">
+      <div className="rounded-xl border border-hairline bg-surface-soft/40 p-4">
+        <p className="flex items-center gap-1.5 text-xs font-semibold text-muted uppercase tracking-wider mb-3 pb-3 border-b border-hairline">
           <List className="w-3.5 h-3.5" />
           目录
         </p>
-        <nav className="max-h-[calc(100vh-12rem)] overflow-y-auto pr-2">
-          {tocList}
+        <nav className="max-h-[calc(100vh-16rem)] overflow-y-auto pr-1">
+          <ul className="space-y-0.5">
+            {headings.map((h) => (
+              <li key={h.id} className={h.level === 3 ? "ml-4" : ""}>
+                <a
+                  href={`#${h.id}`}
+                  onClick={(e) => handleClick(e, h.id)}
+                  className={`block px-2.5 py-1.5 rounded-md text-sm leading-snug transition-colors ${
+                    activeId === h.id
+                      ? "bg-primary/10 text-primary font-medium"
+                      : "text-muted hover:text-ink hover:bg-surface-soft/60"
+                  }`}
+                >
+                  {h.text}
+                </a>
+              </li>
+            ))}
+          </ul>
         </nav>
       </div>
     </div>
