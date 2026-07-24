@@ -29,6 +29,105 @@ export default function Comments() {
     let customizeInterval = null;
     setError(null);
 
+    // ── 定制 Twikoo 表单：昵称栏改为 QQ 号输入 ──────────────
+    // Twikoo 内置 checkQQ() 逻辑：当昵称为纯 QQ 号时，自动将邮箱设为
+    // "号码@qq.com"，从而触发 QQ 头像显示。
+    // 但 getQQNick() 在未配置 QQ_API_KEY 时会调用 clearNickIfFromQQInput()
+    // 清空昵称，因此需要覆盖该方法以保留 QQ 号作为昵称。
+    //
+    // 定制函数在 useEffect 顶层定义（非 async initTwikoo 内部），
+    // 确保 setInterval 不依赖 await import() 的完成时机。
+    const customizeTwikoo = () => {
+      const container = containerRef.current;
+      if (!container || cancelled) return;
+
+      // 1. 覆盖 clearNickIfFromQQInput，防止 QQ 号被清空
+      const twikooEl = container.querySelector(".twikoo");
+      if (twikooEl && twikooEl.__vue__) {
+        const rootVue = twikooEl.__vue__;
+        const findComp = (vm) => {
+          if (vm.clearNickIfFromQQInput) return vm;
+          for (const child of vm.$children || []) {
+            const f = findComp(child);
+            if (f) return f;
+          }
+          return null;
+        };
+        const comp = findComp(rootVue);
+        if (comp) {
+          // 不清空昵称，保留用户输入的 QQ 号
+          comp.clearNickIfFromQQInput = function () {};
+        }
+      }
+
+      // 2. 定制昵称输入框
+      const nickInput = container.querySelector('input[name="nick"]');
+      if (nickInput) {
+        // 修改标签文字
+        const nickWrapper = nickInput.closest(".el-input");
+        const label = nickWrapper?.querySelector(
+          ".el-input-group__prepend"
+        );
+        if (label) {
+          label.textContent = "QQ";
+        }
+        // 修改占位符
+        nickInput.placeholder =
+          lang === "zh" ? "请输入QQ号" : "Enter QQ number";
+        // 限制输入类型
+        nickInput.setAttribute("inputmode", "numeric");
+        nickInput.setAttribute("pattern", "[0-9]*");
+        nickInput.setAttribute("maxlength", "11");
+
+        // 添加输入限制：只允许数字
+        if (!nickInput.dataset.qqRestrict) {
+          nickInput.dataset.qqRestrict = "true";
+          let isProcessing = false;
+          nickInput.addEventListener("input", (e) => {
+            if (isProcessing) return;
+            const digits = e.target.value
+              .replace(/[^0-9]/g, "")
+              .substring(0, 11);
+            if (digits !== e.target.value) {
+              isProcessing = true;
+              const setter = Object.getOwnPropertyDescriptor(
+                window.HTMLInputElement.prototype,
+                "value"
+              ).set;
+              setter.call(e.target, digits);
+              e.target.dispatchEvent(new Event("input", { bubbles: true }));
+              isProcessing = false;
+            }
+          });
+        }
+      }
+
+      // 3. 隐藏邮箱栏（由 QQ 号通过 checkQQ() 自动填充）
+      const mailInput = container.querySelector('input[name="mail"]');
+      if (mailInput) {
+        const mailWrapper = mailInput.closest(".el-input");
+        if (mailWrapper) {
+          mailWrapper.style.display = "none";
+        }
+      }
+
+      // 4. 添加提示文字
+      const metaInput = container.querySelector(".tk-meta-input");
+      if (metaInput && !metaInput.querySelector(".tk-qq-hint")) {
+        const hint = document.createElement("div");
+        hint.className = "tk-qq-hint";
+        hint.textContent =
+          lang === "zh"
+            ? "输入QQ号将自动获取QQ头像"
+            : "Enter your QQ number to use your QQ avatar";
+        metaInput.appendChild(hint);
+      }
+    };
+
+    // 立即开始轮询定制（不依赖 await import 完成时机）
+    // customizeTwikoo 内部会跳过已完成的定制，所以高频调用是安全的。
+    customizeInterval = setInterval(customizeTwikoo, 500);
+
     const initTwikoo = async () => {
       try {
         const mod = await import("twikoo");
@@ -60,103 +159,6 @@ export default function Comments() {
             }
           });
         }
-
-        // ── 定制 Twikoo 表单：昵称栏改为 QQ 号输入 ──────────────
-        // Twikoo 内置 checkQQ() 逻辑：当昵称为纯 QQ 号时，自动将邮箱设为
-        // "号码@qq.com"，从而触发 QQ 头像显示。
-        // 但 getQQNick() 在未配置 QQ_API_KEY 时会调用 clearNickIfFromQQInput()
-        // 清空昵称，因此需要覆盖该方法以保留 QQ 号作为昵称。
-        const customizeTwikoo = () => {
-          const container = containerRef.current;
-          if (!container || cancelled) return;
-
-          // 1. 覆盖 clearNickIfFromQQInput，防止 QQ 号被清空
-          const twikooEl = container.querySelector(".twikoo");
-          if (twikooEl && twikooEl.__vue__) {
-            const rootVue = twikooEl.__vue__;
-            const findComp = (vm) => {
-              if (vm.clearNickIfFromQQInput) return vm;
-              for (const child of vm.$children || []) {
-                const f = findComp(child);
-                if (f) return f;
-              }
-              return null;
-            };
-            const comp = findComp(rootVue);
-            if (comp) {
-              // 不清空昵称，保留用户输入的 QQ 号
-              comp.clearNickIfFromQQInput = function () {};
-            }
-          }
-
-          // 2. 定制昵称输入框
-          const nickInput = container.querySelector('input[name="nick"]');
-          if (nickInput) {
-            // 修改标签文字
-            const nickWrapper = nickInput.closest(".el-input");
-            const label = nickWrapper?.querySelector(
-              ".el-input-group__prepend"
-            );
-            if (label) {
-              label.textContent = "QQ";
-            }
-            // 修改占位符
-            nickInput.placeholder =
-              lang === "zh" ? "请输入QQ号" : "Enter QQ number";
-            // 限制输入类型
-            nickInput.setAttribute("inputmode", "numeric");
-            nickInput.setAttribute("pattern", "[0-9]*");
-            nickInput.setAttribute("maxlength", "11");
-
-            // 添加输入限制：只允许数字
-            if (!nickInput.dataset.qqRestrict) {
-              nickInput.dataset.qqRestrict = "true";
-              let isProcessing = false;
-              nickInput.addEventListener("input", (e) => {
-                if (isProcessing) return;
-                const digits = e.target.value
-                  .replace(/[^0-9]/g, "")
-                  .substring(0, 11);
-                if (digits !== e.target.value) {
-                  isProcessing = true;
-                  const setter = Object.getOwnPropertyDescriptor(
-                    window.HTMLInputElement.prototype,
-                    "value"
-                  ).set;
-                  setter.call(e.target, digits);
-                  e.target.dispatchEvent(new Event("input", { bubbles: true }));
-                  isProcessing = false;
-                }
-              });
-            }
-          }
-
-          // 3. 隐藏邮箱栏（由 QQ 号通过 checkQQ() 自动填充）
-          const mailInput = container.querySelector('input[name="mail"]');
-          if (mailInput) {
-            const mailWrapper = mailInput.closest(".el-input");
-            if (mailWrapper) {
-              mailWrapper.style.display = "none";
-            }
-          }
-
-          // 4. 添加提示文字
-          const metaInput = container.querySelector(".tk-meta-input");
-          if (metaInput && !metaInput.querySelector(".tk-qq-hint")) {
-            const hint = document.createElement("div");
-            hint.className = "tk-qq-hint";
-            hint.textContent =
-              lang === "zh"
-                ? "输入QQ号将自动获取QQ头像"
-                : "Enter your QQ number to use your QQ avatar";
-            metaInput.appendChild(hint);
-          }
-        };
-
-        // 使用 setInterval 轮询定制：Twikoo 表单渲染需要数秒（需调后端 API），
-        // MutationObserver 的 debounce 会被频繁的 DOM 变动反复重置导致永不触发。
-        // customizeTwikoo 内部会跳过已完成的定制，所以高频调用是安全的。
-        customizeInterval = setInterval(customizeTwikoo, 500);
       } catch (err) {
         setError(err.message || String(err));
       }
