@@ -52,17 +52,24 @@ export function useViewCount(key) {
     let cancelled = false;
 
     async function run() {
-      if (isSupabaseConfigured) {
-        const newCount = await incrementViewCount(key);
-        if (!cancelled) {
-          setCount(newCount);
-          setLoading(false);
+      try {
+        if (isSupabaseConfigured) {
+          const newCount = await incrementViewCount(key);
+          if (!cancelled) {
+            setCount(newCount);
+            setLoading(false);
+          }
+        } else {
+          // Fallback to localStorage
+          const newCount = localIncrement(key);
+          if (!cancelled) {
+            setCount(newCount);
+            setLoading(false);
+          }
         }
-      } else {
-        // Fallback to localStorage
-        const newCount = localIncrement(key);
+      } catch (err) {
+        console.warn("[view-count] Unexpected error in useViewCount:", err);
         if (!cancelled) {
-          setCount(newCount);
           setLoading(false);
         }
       }
@@ -95,20 +102,27 @@ export function useViewCounts(slugs) {
     let cancelled = false;
 
     async function run() {
-      if (isSupabaseConfigured) {
-        const map = await fetchViewCounts(slugs);
-        if (!cancelled) {
-          setCounts(map);
-          setLoading(false);
+      try {
+        if (isSupabaseConfigured) {
+          const map = await fetchViewCounts(slugs);
+          if (!cancelled) {
+            setCounts(map);
+            setLoading(false);
+          }
+        } else {
+          // Fallback: read from localStorage
+          const map = {};
+          for (const slug of slugs) {
+            map[slug] = localGet(slug);
+          }
+          if (!cancelled) {
+            setCounts(map);
+            setLoading(false);
+          }
         }
-      } else {
-        // Fallback: read from localStorage
-        const map = {};
-        for (const slug of slugs) {
-          map[slug] = localGet(slug);
-        }
+      } catch (err) {
+        console.warn("[view-count] Unexpected error in useViewCounts:", err);
         if (!cancelled) {
-          setCounts(map);
           setLoading(false);
         }
       }

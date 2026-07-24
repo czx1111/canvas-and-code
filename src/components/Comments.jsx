@@ -40,12 +40,21 @@ export default function Comments() {
         // 清空上一次的评论内容（SPA 路由切换时需要重新初始化）
         containerRef.current.innerHTML = "";
 
-        twikoo.init({
+        const result = twikoo.init({
           envId,
           el: containerRef.current,
           lang: lang === "zh" ? "zh-CN" : "en",
           darkMode: theme === "dark",
         });
+        // twikoo.init() 可能返回 Promise，需要处理拒绝情况
+        if (result && typeof result.catch === "function") {
+          result.catch((err) => {
+            if (!cancelled) {
+              console.warn("[twikoo] init failed:", err);
+              setError(String(err));
+            }
+          });
+        }
       } catch (err) {
         setError(err.message || String(err));
       }

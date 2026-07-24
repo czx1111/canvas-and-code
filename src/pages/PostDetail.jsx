@@ -43,10 +43,14 @@ export default function PostDetail() {
   const categoryLabel = t(`common.categories.${post.category}`);
 
   const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
+    navigator.clipboard.writeText(window.location.href)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      })
+      .catch(() => {
+        // 在不安全上下文（如 HTTP）中剪贴板 API 不可用，静默处理
+      });
   };
 
   return (

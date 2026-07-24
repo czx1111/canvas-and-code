@@ -12,16 +12,29 @@ export default function SiteStats() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
+
     async function load() {
-      if (isSupabaseConfigured) {
-        await registerSiteVisit();
-        const stats = await fetchSiteStats();
-        setVisitors(stats.visitors);
-        setTotalViews(stats.totalViews);
+      try {
+        if (isSupabaseConfigured) {
+          await registerSiteVisit();
+          const stats = await fetchSiteStats();
+          if (!cancelled) {
+            setVisitors(stats.visitors);
+            setTotalViews(stats.totalViews);
+          }
+        }
+      } catch (err) {
+        console.warn("[site-stats] Unexpected error:", err);
+      } finally {
+        if (!cancelled) setLoading(false);
       }
-      setLoading(false);
     }
     load();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const formatNumber = (n) => {
