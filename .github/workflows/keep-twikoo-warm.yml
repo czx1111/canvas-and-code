@@ -1,0 +1,19 @@
+name: Keep Twikoo Warm
+
+on:
+  schedule:
+    # Every 10 minutes
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Twikoo backend
+        run: |
+          curl -s -X POST \
+            -H "Content-Type: application/json" \
+            -d '{"event":"GET_COMMENT_META"}' \
+            "https://twikoo-seven-ochre.vercel.app/" \
+            -o /dev/null -w "HTTP %{http_code} | %{time_total}s\n"
