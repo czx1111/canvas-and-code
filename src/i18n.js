@@ -51,6 +51,7 @@ export const translations = {
       writtenBy: "Written by",
       prevPost: "Previous",
       nextPost: "Next",
+      comments: "Comments",
     },
     // About
     about: {
@@ -181,6 +182,7 @@ export const translations = {
       writtenBy: "作者",
       prevPost: "上一篇",
       nextPost: "下一篇",
+      comments: "评论",
     },
     // About
     about: {

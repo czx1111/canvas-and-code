@@ -9,6 +9,7 @@ import PostContent from "../components/PostContent.jsx";
 import TableOfContents from "../components/TableOfContents.jsx";
 import ReadingProgress from "../components/ReadingProgress.jsx";
 import PostNav from "../components/PostNav.jsx";
+import Comments from "../components/Comments.jsx";
 
 export default function NoteDetail() {
   const { slug } = useParams();
@@ -118,6 +119,9 @@ export default function NoteDetail() {
       <div className="mt-8">
         <PostNav prev={prevNote} next={nextNote} basePath="/note" />
       </div>
+
+      {/* Comments */}
+      <Comments />
       </article>
       <aside className="hidden xl:block w-56 flex-shrink-0">
         <TableOfContents content={content} variant="desktop" />

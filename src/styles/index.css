@@ -171,3 +171,176 @@
 .dark .hljs-params { color: #e8a55a !important; }
 .dark .hljs-function .hljs-title,
 .dark .hljs-title.function_ { color: #a29bfe !important; }
+
+/* ── Twikoo Comment System: Theme Overrides ────────────── */
+/* 将 Twikoo 默认样式适配到博客的暖色设计系统 */
+
+.tk {
+  --tk-bg: var(--color-canvas);
+  --tk-text: var(--color-body);
+  --tk-border: var(--color-hairline);
+  --tk-primary: var(--color-primary);
+  --tk-surface: var(--color-surface-soft);
+}
+
+/* 输入区域 */
+.tk-input .el-input__inner,
+.tk-input input {
+  background-color: var(--color-surface-soft) !important;
+  border-color: var(--color-hairline) !important;
+  color: var(--color-ink) !important;
+  border-radius: 8px !important;
+  transition: border-color 0.2s ease;
+}
+.tk-input .el-input__inner:focus,
+.tk-input input:focus {
+  border-color: var(--color-primary) !important;
+}
+.tk-input .el-input__inner::placeholder,
+.tk-input input::placeholder {
+  color: var(--color-muted) !important;
+}
+
+/* 评论输入框 */
+.tk-textarea .el-textarea__inner,
+.tk-textarea textarea {
+  background-color: var(--color-surface-soft) !important;
+  border-color: var(--color-hairline) !important;
+  color: var(--color-ink) !important;
+  border-radius: 8px !important;
+  transition: border-color 0.2s ease;
+}
+.tk-textarea .el-textarea__inner:focus,
+.tk-textarea textarea:focus {
+  border-color: var(--color-primary) !important;
+}
+.tk-textarea .el-textarea__inner::placeholder,
+.tk-textarea textarea::placeholder {
+  color: var(--color-muted) !important;
+}
+
+/* 提交按钮 */
+.tk-submit .el-button,
+.tk-submit button {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  transition: background-color 0.2s ease;
+}
+.tk-submit .el-button:hover,
+.tk-submit button:hover {
+  background-color: var(--color-primary-active) !important;
+  border-color: var(--color-primary-active) !important;
+}
+
+/* 评论项 */
+.tk-comment {
+  border-bottom: 1px solid var(--color-hairline) !important;
+  padding: 16px 0 !important;
+}
+.tk-comment .tk-nick {
+  color: var(--color-ink) !important;
+  font-weight: 600 !important;
+}
+.tk-comment .tk-meta {
+  color: var(--color-muted) !important;
+}
+.tk-comment .tk-content {
+  color: var(--color-body) !important;
+  line-height: 1.8 !important;
+}
+.tk-comment .tk-content a {
+  color: var(--color-primary) !important;
+}
+.tk-comment .tk-content a:hover {
+  color: var(--color-primary-active) !important;
+}
+
+/* 头像 */
+.tk-avatar {
+  border-radius: 50% !important;
+}
+
+/* 操作按钮（回复、删除等） */
+.tk-actions a,
+.tk-actions .tk-action {
+  color: var(--color-muted) !important;
+  transition: color 0.2s ease;
+}
+.tk-actions a:hover,
+.tk-actions .tk-action:hover {
+  color: var(--color-primary) !important;
+}
+
+/* 加载更多 */
+.tk-load-more .el-button,
+.tk-load-more button {
+  background-color: var(--color-surface-soft) !important;
+  border-color: var(--color-hairline) !important;
+  color: var(--color-body) !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease;
+}
+.tk-load-more .el-button:hover,
+.tk-load-more button:hover {
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary) !important;
+}
+
+/* 管理员标签 */
+.tk-tag {
+  background-color: var(--color-primary) !important;
+  color: #fff !important;
+  border-radius: 4px !important;
+}
+
+/* 回复区域 */
+.tk-reply .el-textarea__inner,
+.tk-reply textarea {
+  background-color: var(--color-surface-soft) !important;
+  border-color: var(--color-hairline) !important;
+  color: var(--color-ink) !important;
+  border-radius: 8px !important;
+}
+.tk-reply .el-button--primary,
+.tk-reply button {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+/* 预览 */
+.tk-preview {
+  background-color: var(--color-surface-soft) !important;
+  border-color: var(--color-hairline) !important;
+  border-radius: 8px !important;
+}
+
+/* 错误/消息提示 */
+.tk-error,
+.tk-message {
+  color: var(--color-muted) !important;
+}
+
+/* 图标颜色 */
+.tk-icon {
+  color: var(--color-muted) !important;
+}
+
+/* Emoji 面板 */
+.tk-emoji-popup {
+  background-color: var(--color-surface-card) !important;
+  border-color: var(--color-hairline) !important;
+  border-radius: 8px !important;
+}
+
+/* 分页器 */
+.tk-pagination .el-pager li,
+.tk-pagination button {
+  background-color: transparent !important;
+  color: var(--color-body) !important;
+}
+.tk-pagination .el-pager li.active {
+  color: var(--color-primary) !important;
+}
