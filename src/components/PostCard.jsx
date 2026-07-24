@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Clock, Tag } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
+import { formatDate } from "../lib/date.js";
 
 export default function PostCard({ post, delay = 0 }) {
   const { lang, t } = useI18n();
@@ -8,13 +9,6 @@ export default function PostCard({ post, delay = 0 }) {
   const title = lang === "zh" && post.titleZh ? post.titleZh : post.title;
   const excerpt = lang === "zh" && post.excerptZh ? post.excerptZh : post.excerpt;
   const categoryLabel = t(`common.categories.${post.category}`);
-
-  const formatDate = (dateStr) => {
-    if (!dateStr) return "";
-    const d = new Date(dateStr);
-    if (lang === "zh") return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
-    return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-  };
 
   return (
     <div className="animate-fade-in-up h-full" style={{ animationDelay: `${delay}ms`, opacity: 0 }}>
@@ -49,7 +43,7 @@ export default function PostCard({ post, delay = 0 }) {
         {/* Body — flex-1 so all cards in a row are equal height */}
         <div className="p-5 flex-1 flex flex-col">
           <div className="flex items-center gap-3 mb-3 text-xs text-muted">
-            <time>{formatDate(post.date)}</time>
+            <time>{formatDate(post.date, lang)}</time>
             <span className="w-1 h-1 rounded-full bg-hairline" />
             <span className="flex items-center gap-1">
               <Clock className="w-3 h-3" />

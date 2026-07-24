@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Clock, Tag, Share2, Check, Twitter, Github, Linkedin } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 import { useBlogData } from "../contexts/BlogDataContext.jsx";
+import { formatDate } from "../lib/date.js";
 import PostContent from "../components/PostContent.jsx";
 import TableOfContents from "../components/TableOfContents.jsx";
 import ReadingProgress from "../components/ReadingProgress.jsx";
@@ -83,7 +84,7 @@ export default function PostDetail() {
             </div>
             <div>
               <p className="text-sm font-medium text-ink">{lang === "zh" ? "作者" : "Author"}</p>
-              <time className="text-xs text-muted">{formatDate(post.date)}</time>
+              <time className="text-xs text-muted">{formatDate(post.date, lang)}</time>
             </div>
           </div>
         </div>

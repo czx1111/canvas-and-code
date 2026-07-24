@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { FileText, Type, Users, Eye, Clock } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 import { siteStats } from "../generated/site-stats.js";
+import { formatDate } from "../lib/date.js";
 import { isSupabaseConfigured, registerSiteVisit, fetchSiteStats } from "../lib/supabase.js";
 
 export default function SiteStats() {
@@ -22,13 +23,6 @@ export default function SiteStats() {
     }
     load();
   }, []);
-
-  const formatDate = (dateStr) => {
-    if (!dateStr) return "";
-    const d = new Date(dateStr);
-    if (lang === "zh") return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
-    return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-  };
 
   const formatNumber = (n) => {
     if (n >= 10000) return lang === "zh" ? `${(n / 10000).toFixed(1)}万` : `${(n / 1000).toFixed(1)}k`;
@@ -59,7 +53,7 @@ export default function SiteStats() {
     {
       icon: Clock,
       label: lang === "zh" ? "最后更新" : "Last Updated",
-      value: formatDate(siteStats.latestDate),
+      value: formatDate(siteStats.latestDate, lang),
     },
   ];
 

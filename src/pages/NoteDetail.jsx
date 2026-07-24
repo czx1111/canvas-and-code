@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Clock, Tag, Eye } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 import { useNotesData } from "../contexts/NotesDataContext.jsx";
+import { formatDate } from "../lib/date.js";
 import { useViewCount } from "../hooks/useViewCount.js";
 import PostContent from "../components/PostContent.jsx";
 import TableOfContents from "../components/TableOfContents.jsx";
@@ -50,13 +51,6 @@ export default function NoteDetail() {
       ? t(`notes.categories.${note.category}`)
       : note.category;
 
-  const formatDate = (dateStr) => {
-    if (!dateStr) return "";
-    const d = new Date(dateStr);
-    if (lang === "zh") return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
-    return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-  };
-
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
       <ReadingProgress />
@@ -86,7 +80,7 @@ export default function NoteDetail() {
             <Eye className="w-3 h-3" />
             {viewCount} {lang === "zh" ? "次阅读" : "views"}
           </span>
-          <time className="text-xs text-muted">{formatDate(note.date)}</time>
+          <time className="text-xs text-muted">{formatDate(note.date, lang)}</time>
         </div>
         <h1 className="font-display text-3xl md:text-4xl text-ink leading-tight tracking-tight mb-4">
           {title}

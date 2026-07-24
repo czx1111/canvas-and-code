@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, BookOpen, CodeXml, Palette, Lightbulb, Pen, Tag, Clock } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 import { useBlogData } from "../contexts/BlogDataContext.jsx";
+import { formatDate } from "../lib/date.js";
 import PostCard from "../components/PostCard.jsx";
 
 export default function Home() {
@@ -16,13 +17,6 @@ export default function Home() {
     { icon: Palette, name: t("home.catDesign"), desc: lang === "zh" ? "视觉思维、界面与好设计的温暖" : "Visual thinking, interfaces, and the warmth of good design", color: "text-accent-teal", bg: "bg-accent-teal/10", cat: "Design" },
     { icon: Lightbulb, name: t("home.catThoughts"), desc: lang === "zh" ? "想法、灵感与之间的空间" : "Ideas, inspiration, and the spaces in between", color: "text-accent-amber", bg: "bg-accent-amber/10", cat: "Thoughts" },
   ];
-
-  const formatDate = (dateStr) => {
-    if (!dateStr) return "";
-    const d = new Date(dateStr);
-    if (lang === "zh") return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
-    return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-  };
 
   const ft = featured
     ? { title: lang === "zh" && featured.titleZh ? featured.titleZh : featured.title, excerpt: lang === "zh" && featured.excerptZh ? featured.excerptZh : featured.excerpt }
@@ -124,7 +118,7 @@ export default function Home() {
             </div>
             <div className="p-5">
               <div className="flex items-center gap-3 mb-3 text-xs text-muted">
-                <time>{formatDate(featured.date)}</time>
+                <time>{formatDate(featured.date, lang)}</time>
                 <span className="w-1 h-1 rounded-full bg-hairline" />
                 <span className="flex items-center gap-1">
                   <Clock className="w-3 h-3" />

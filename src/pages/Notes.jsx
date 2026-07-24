@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Search, Clock, Tag, ArrowRight, BookOpen, Eye } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 import { useNotesData } from "../contexts/NotesDataContext.jsx";
+import { formatDate } from "../lib/date.js";
 import { useViewCounts } from "../hooks/useViewCount.js";
 
 export default function Notes() {
@@ -42,13 +43,6 @@ export default function Notes() {
   // Batch fetch view counts for all notes
   const allSlugs = useMemo(() => notes.map((n) => n.slug), [notes]);
   const { counts: viewCounts } = useViewCounts(allSlugs);
-
-  const formatDate = (dateStr) => {
-    if (!dateStr) return "";
-    const d = new Date(dateStr);
-    if (lang === "zh") return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
-    return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-  };
 
   return (
     <div>
@@ -128,7 +122,7 @@ export default function Notes() {
                         <Eye className="w-3 h-3" />
                         {viewCounts[note.slug] || 0} {lang === "zh" ? "阅读" : "views"}
                       </span>
-                      <time className="text-xs text-muted">{formatDate(note.date)}</time>
+                      <time className="text-xs text-muted">{formatDate(note.date, lang)}</time>
                     </div>
                     <h3 className="font-display text-lg text-ink group-hover:text-primary transition-colors mb-2 leading-snug">
                       {title}
