@@ -15,5 +15,5 @@ jobs:
           curl -s -X POST \
             -H "Content-Type: application/json" \
             -d '{"event":"GET_COMMENT_META"}' \
-            "https://twikoo-seven-ochre.vercel.app/" \
+            "https://xdcr.ccwu.cc/" \
             -o /dev/null -w "HTTP %{http_code} | %{time_total}s\n"

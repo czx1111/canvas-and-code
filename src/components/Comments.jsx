@@ -45,6 +45,8 @@ export default function Comments() {
           el: containerRef.current,
           lang: lang === "zh" ? "zh-CN" : "en",
           darkMode: theme === "dark",
+          // 按 SPA 路由路径隔离评论，避免所有页面共享同一套评论
+          path: location.pathname,
         });
         // twikoo.init() 可能返回 Promise，需要处理拒绝情况
         if (result && typeof result.catch === "function") {
