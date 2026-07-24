@@ -150,23 +150,6 @@ export default function Home() {
         </section>
       )}
 
-      {/* Subscribe */}
-      <section className="border-y border-hairline bg-surface-soft/30">
-        <div className="max-w-5xl mx-auto px-6 py-16 text-center">
-          <h2 className="font-display text-3xl text-ink mb-3">{t("home.subscribeTitle")}</h2>
-          <p className="text-muted max-w-md mx-auto mb-6">{t("home.subscribeSubtitle")}</p>
-          <form onSubmit={(e) => e.preventDefault()} className="flex items-center gap-3 max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder={t("home.subscribePlaceholder")}
-              className="flex-1 px-4 py-2.5 rounded-lg border border-hairline bg-white text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
-            />
-            <button type="submit" className="px-5 py-2.5 rounded-lg bg-primary text-white font-medium text-sm hover:bg-primary-active transition-colors whitespace-nowrap">
-              {t("home.subscribeBtn")}
-            </button>
-          </form>
-        </div>
-      </section>
     </div>
   );
 }
