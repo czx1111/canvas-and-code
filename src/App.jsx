@@ -20,6 +20,8 @@ const FriendLinks = lazy(() => import("./pages/FriendLinks.jsx"));
 const Guestbook = lazy(() => import("./pages/Guestbook.jsx"));
 const About = lazy(() => import("./pages/About.jsx"));
 const Archive = lazy(() => import("./pages/Archive.jsx"));
+const Projects = lazy(() => import("./pages/Projects.jsx"));
+const Changelog = lazy(() => import("./pages/Changelog.jsx"));
 const NotFound = lazy(() => import("./pages/NotFound.jsx"));
 
 function PageLoader() {
@@ -63,6 +65,8 @@ export default function App() {
               <Route path="/guestbook" element={<Guestbook />} />
               <Route path="/about" element={<About />} />
               <Route path="/archive" element={<Archive />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/changelog" element={<Changelog />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

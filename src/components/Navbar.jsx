@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Globe, House, BookOpen, User, NotebookPen, Sun, Moon, Search, Archive, Hash } from "lucide-react";
+import { Menu, X, Globe, House, BookOpen, User, NotebookPen, Sun, Moon, Search, Archive, Hash, FolderGit2, GitCommit } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 import { useTheme } from "../contexts/ThemeContext.jsx";
 
@@ -16,6 +16,8 @@ export default function Navbar({ onSearchOpen }) {
     { to: "/notes", label: t("nav.notes"), icon: NotebookPen },
     { to: "/tags", label: t("nav.tags"), icon: Hash },
     { to: "/archive", label: t("nav.archive"), icon: Archive },
+    { to: "/projects", label: t("nav.projects"), icon: FolderGit2 },
+    { to: "/changelog", label: t("nav.changelog"), icon: GitCommit },
     { to: "/about", label: t("nav.about"), icon: User },
   ];
 

@@ -17,6 +17,8 @@ export default function Footer() {
   const extraLinks = [
     { to: "/links", label: lang === "zh" ? "友链" : "Links" },
     { to: "/guestbook", label: lang === "zh" ? "留言板" : "Guestbook" },
+    { to: "/projects", label: lang === "zh" ? "项目" : "Projects" },
+    { to: "/changelog", label: lang === "zh" ? "更新日志" : "Changelog" },
   ];
 
   return (

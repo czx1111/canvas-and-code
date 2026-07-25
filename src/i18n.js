@@ -11,6 +11,8 @@ export const translations = {
       about: "About",
       source: "Source",
       archive: "Archive",
+      projects: "Projects",
+      changelog: "Changelog",
     },
     // Home
     home: {
@@ -124,6 +126,8 @@ export const translations = {
       about: "关于",
       source: "源码",
       archive: "归档",
+      projects: "项目",
+      changelog: "更新日志",
     },
     // Home
     home: {
