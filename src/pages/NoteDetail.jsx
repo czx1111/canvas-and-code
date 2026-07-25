@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect } from "react";
-import { ArrowLeft, Clock, Tag, Eye } from "lucide-react";
+import { ArrowLeft, Clock, Eye } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 import { useNotesData } from "../contexts/NotesDataContext.jsx";
 import { formatDate } from "../lib/date.js";
@@ -8,6 +8,7 @@ import { useViewCount } from "../hooks/useViewCount.js";
 import ArticleLayout from "../components/ArticleLayout.jsx";
 import SEO from "../components/SEO.jsx";
 import { useReadingHistory } from "../hooks/useReadingHistory.js";
+import { getCategoryLabel, getCategoryConfig } from "../lib/categories.js";
 
 export default function NoteDetail() {
   const { slug } = useParams();
@@ -53,16 +54,15 @@ export default function NoteDetail() {
 
   const title = lang === "zh" && note.titleZh ? note.titleZh : note.title;
   const content = lang === "zh" && note.contentZh ? note.contentZh : note.content;
-  const catLabel =
-    t(`notes.categories.${note.category}`) !== `notes.categories.${note.category}`
-      ? t(`notes.categories.${note.category}`)
-      : note.category;
+  const catLabel = getCategoryLabel(note.category, lang);
+  const catConfig = getCategoryConfig(note.category);
+  const CatIcon = catConfig.icon;
 
   const header = (
     <header className="mb-8">
       <div className="flex items-center gap-3 mb-4">
         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-xs font-medium text-primary">
-          <Tag className="w-3 h-3" />
+          {CatIcon && <CatIcon className="w-3 h-3" />}
           {catLabel}
         </span>
         <span className="flex items-center gap-1 text-xs text-muted">
