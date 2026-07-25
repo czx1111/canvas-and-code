@@ -60,6 +60,9 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Firefox scrollbar compatibility */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-scrollbar-thumb) transparent;
   }
   body {
     @apply font-body antialiased;
@@ -102,7 +105,7 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Scrollbar */
+/* Scrollbar (WebKit) */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--color-scrollbar-thumb); border-radius: 4px; }
@@ -352,4 +355,71 @@
   margin-top: 4px;
   padding: 0 4px;
   line-height: 1.4;
+}
+
+/* ── Reduced Motion: respect user preference ─────────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-fade-in,
+  .animate-fade-in-up {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* ── Print Styles ─────────────────────────────────────── */
+@media print {
+  /* Hide non-essential UI elements */
+  header,
+  footer,
+  .reading-progress,
+  aside,
+  .tk-comments,
+  nav[class*="post-nav"],
+  .mobile-toc,
+  .scroll-to-top {
+    display: none !important;
+  }
+
+  /* Use white background and black text for print */
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Expand article to full width */
+  article {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  /* Ensure links show their URLs */
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    color: #555;
+  }
+
+  /* Avoid breaking inside these elements */
+  h1, h2, h3, h4, p, blockquote, pre, table {
+    page-break-inside: avoid;
+  }
+
+  /* Force black headings */
+  h1, h2, h3, h4, h5, h6 {
+    color: black !important;
+  }
+
+  /* Code blocks: remove background, use monospace */
+  pre {
+    background: #f5f5f5 !important;
+    border: 1px solid #ddd !important;
+    color: black !important;
+  }
 }

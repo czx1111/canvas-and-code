@@ -92,27 +92,29 @@ export default function Navbar() {
       </nav>
 
       {/* Mobile Menu */}
-      {mobileOpen && (
-        <div className="md:hidden border-t border-hairline bg-canvas">
-          <div className="max-w-5xl mx-auto px-6 py-4 flex flex-col gap-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-2 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                  isActive(link.to)
-                    ? "bg-primary/10 text-primary"
-                    : "text-body hover:bg-surface-soft"
-                }`}
-              >
-                <link.icon className="w-4 h-4" />
-                {link.label}
-              </Link>
-            ))}
-          </div>
+      <div
+        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out border-hairline bg-canvas ${
+          mobileOpen ? "max-h-96 opacity-100 border-t" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="max-w-5xl mx-auto px-6 py-4 flex flex-col gap-1">
+          {navLinks.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              onClick={() => setMobileOpen(false)}
+              className={`flex items-center gap-2 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                isActive(link.to)
+                  ? "bg-primary/10 text-primary"
+                  : "text-body hover:bg-surface-soft"
+              }`}
+            >
+              <link.icon className="w-4 h-4" />
+              {link.label}
+            </Link>
+          ))}
         </div>
-      )}
+      </div>
     </header>
   );
 }

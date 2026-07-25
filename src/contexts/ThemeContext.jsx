@@ -23,6 +23,19 @@ export function ThemeProvider({ children }) {
     localStorage.setItem("blog-theme", theme);
   }, [theme]);
 
+  // Follow system theme changes when user hasn't explicitly chosen a theme
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const handler = (e) => {
+      // Only auto-switch if the user hasn't set a manual preference
+      if (!localStorage.getItem("blog-theme")) {
+        setTheme(e.matches ? "dark" : "light");
+      }
+    };
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
   const toggleTheme = () => setTheme((prev) => (prev === "light" ? "dark" : "light"));
 
   return (

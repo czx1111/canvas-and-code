@@ -1,6 +1,7 @@
 import { MapPin, Calendar, Coffee, Mail, Github, Twitter } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 import SiteStats from "../components/SiteStats.jsx";
+import SEO from "../components/SEO.jsx";
 
 export default function About() {
   const { t, lang } = useI18n();
@@ -20,6 +21,7 @@ export default function About() {
 
   return (
     <div>
+      <SEO title={t("about.title")} description={lang === "zh" ? "关于我是谁以及为什么写作的一点介绍。" : "A little about who I am and why I write."} />
       {/* Header */}
       <section className="max-w-5xl mx-auto px-6 pt-12 pb-12">
         <div className="mb-12">

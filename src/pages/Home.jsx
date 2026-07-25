@@ -4,6 +4,7 @@ import { useI18n } from "../contexts/I18nContext.jsx";
 import { useBlogData } from "../contexts/BlogDataContext.jsx";
 import { formatDate } from "../lib/date.js";
 import PostCard from "../components/PostCard.jsx";
+import SEO from "../components/SEO.jsx";
 
 export default function Home() {
   const { t, lang } = useI18n();
@@ -24,6 +25,7 @@ export default function Home() {
 
   return (
     <div>
+      <SEO />
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />

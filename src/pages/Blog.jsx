@@ -4,6 +4,7 @@ import { Search } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 import { useBlogData } from "../contexts/BlogDataContext.jsx";
 import PostCard from "../components/PostCard.jsx";
+import SEO from "../components/SEO.jsx";
 
 export default function Blog() {
   const { t, lang } = useI18n();
@@ -45,6 +46,7 @@ export default function Blog() {
 
   return (
     <div>
+      <SEO title={t("blog.title")} description={t("blog.subtitle")} />
       {/* Header */}
       <section className="max-w-5xl mx-auto px-6 pt-12 pb-8">
         <h1 className="font-display text-4xl md:text-5xl text-ink tracking-tight mb-3">

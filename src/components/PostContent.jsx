@@ -54,9 +54,9 @@ export default function PostContent({ content }) {
         rehypePlugins={[rehypeRaw, [rehypeHighlight, { detect: true, ignoreMissing: true }]]}
         components={{
           h1: ({ children }) => (
-            <h1 className="font-display text-3xl md:text-4xl font-bold text-ink mt-2xl mb-lg leading-tight">
+            <h2 className="font-display text-2xl md:text-3xl font-semibold text-ink mt-xl mb-md leading-tight scroll-mt-20">
               {children}
-            </h1>
+            </h2>
           ),
           h2: ({ children }) => {
             const id = slugify(extractTextFromChildren(children));

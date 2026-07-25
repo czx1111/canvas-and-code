@@ -66,6 +66,14 @@ export default function Footer() {
               </li>
               <li>
                 <a
+                  href="./feed.xml"
+                  className="text-sm text-muted hover:text-primary transition-colors"
+                >
+                  RSS
+                </a>
+              </li>
+              <li>
+                <a
                   href="https://twitter.com"
                   target="_blank"
                   rel="noopener noreferrer"

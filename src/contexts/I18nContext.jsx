@@ -13,6 +13,7 @@ export function I18nProvider({ children }) {
 
   useEffect(() => {
     localStorage.setItem("blog-lang", lang);
+    document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
   }, [lang]);
 
   const t = (path) => {

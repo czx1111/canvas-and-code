@@ -1,31 +1,22 @@
-import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Clock, Tag, Eye } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 import { useNotesData } from "../contexts/NotesDataContext.jsx";
 import { formatDate } from "../lib/date.js";
 import { useViewCount } from "../hooks/useViewCount.js";
-import PostContent from "../components/PostContent.jsx";
-import TableOfContents from "../components/TableOfContents.jsx";
-import ReadingProgress from "../components/ReadingProgress.jsx";
-import PostNav from "../components/PostNav.jsx";
-import Comments from "../components/Comments.jsx";
+import ArticleLayout from "../components/ArticleLayout.jsx";
+import SEO from "../components/SEO.jsx";
 
 export default function NoteDetail() {
   const { slug } = useParams();
   const { t, lang } = useI18n();
   const { notes } = useNotesData();
-  const [copied, setCopied] = useState(false);
 
   const note = notes.find((n) => n.slug === slug);
   const currentIndex = notes.findIndex((n) => n.slug === slug);
   const prevNote = currentIndex > 0 ? notes[currentIndex - 1] : null;
   const nextNote = currentIndex >= 0 && currentIndex < notes.length - 1 ? notes[currentIndex + 1] : null;
   const { count: viewCount } = useViewCount(note ? slug : null);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [slug]);
 
   if (!note) {
     return (
@@ -52,81 +43,63 @@ export default function NoteDetail() {
       ? t(`notes.categories.${note.category}`)
       : note.category;
 
-  return (
-    <div className="max-w-5xl mx-auto px-6 py-12">
-      <ReadingProgress />
-      <div className="flex gap-10">
-      <article className="flex-1 min-w-0 max-w-3xl mx-auto xl:mx-0">
-      {/* Back link */}
-      <Link
-        to="/notes"
-        className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-primary transition-colors mb-8"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        {t("notes.backToNotes")}
-      </Link>
-
-      {/* Header */}
-      <header className="mb-8">
-        <div className="flex items-center gap-3 mb-4">
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-xs font-medium text-primary">
-            <Tag className="w-3 h-3" />
-            {catLabel}
-          </span>
-          <span className="flex items-center gap-1 text-xs text-muted">
-            <Clock className="w-3 h-3" />
-            {note.readTime}
-          </span>
-          <span className="flex items-center gap-1 text-xs text-muted">
-            <Eye className="w-3 h-3" />
-            {viewCount} {lang === "zh" ? "次阅读" : "views"}
-          </span>
-          <time className="text-xs text-muted">{formatDate(note.date, lang)}</time>
+  const header = (
+    <header className="mb-8">
+      <div className="flex items-center gap-3 mb-4">
+        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-xs font-medium text-primary">
+          <Tag className="w-3 h-3" />
+          {catLabel}
+        </span>
+        <span className="flex items-center gap-1 text-xs text-muted">
+          <Clock className="w-3 h-3" />
+          {note.readTime}
+        </span>
+        <span className="flex items-center gap-1 text-xs text-muted">
+          <Eye className="w-3 h-3" />
+          {viewCount} {lang === "zh" ? "次阅读" : "views"}
+        </span>
+        <time className="text-xs text-muted">{formatDate(note.date, lang)}</time>
+      </div>
+      <h1 className="font-display text-3xl md:text-4xl text-ink leading-tight tracking-tight mb-4">
+        {title}
+      </h1>
+      {note.tags.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2">
+          {note.tags.map((tag) => (
+            <span
+              key={tag}
+              className="px-2.5 py-0.5 rounded text-xs text-muted bg-surface-soft border border-hairline"
+            >
+              #{tag}
+            </span>
+          ))}
         </div>
-        <h1 className="font-display text-3xl md:text-4xl text-ink leading-tight tracking-tight mb-4">
-          {title}
-        </h1>
-        {note.tags.length > 0 && (
-          <div className="flex flex-wrap items-center gap-2">
-            {note.tags.map((tag) => (
-              <span
-                key={tag}
-                className="px-2.5 py-0.5 rounded text-xs text-muted bg-surface-soft border border-hairline"
-              >
-                #{tag}
-              </span>
-            ))}
-          </div>
-        )}
-      </header>
+      )}
+    </header>
+  );
 
-      {/* Content */}
-      <TableOfContents content={content} variant="mobile" />
-      <PostContent content={content} />
+  const articleFooter = (
+    <Link
+      to="/notes"
+      className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary-active transition-colors"
+    >
+      <ArrowLeft className="w-4 h-4" />
+      {t("notes.backToNotes")}
+    </Link>
+  );
 
-      {/* Footer — back to notes */}
-      <footer className="mt-12 pt-8 border-t border-hairline">
-        <Link
-          to="/notes"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary-active transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          {t("notes.backToNotes")}
-        </Link>
-      </footer>
-
-      {/* Prev / Next */}
-      <div className="mt-8">
-        <PostNav prev={prevNote} next={nextNote} basePath="/note" />
-      </div>
-
-      {/* Comments */}
-      <Comments />
-      </article>
-      <aside className="hidden xl:block w-56 flex-shrink-0">
-        <TableOfContents content={content} variant="desktop" />
-      </aside>
-      </div>
-    </div>
+  return (
+    <ArticleLayout
+      backTo="/notes"
+      backLabel={t("notes.backToNotes")}
+      header={header}
+      content={content}
+      footer={articleFooter}
+      prev={prevNote}
+      next={nextNote}
+      basePath="/note"
+    >
+      <SEO title={title} ogType="article" />
+    </ArticleLayout>
   );
 }

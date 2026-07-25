@@ -69,10 +69,7 @@ export default function Comments() {
   }, [envId, lang, theme, location.pathname]);
 
   // ── 定制 Twikoo 表单：昵称栏改为 QQ 号 ──────────────────
-  // 使用独立 useEffect（空依赖），避免 theme/lang 变化导致 interval 反复清除。
-  // Twikoo 内置 checkQQ()：当昵称为纯 QQ 号时自动设邮箱为 "号码@qq.com"，
-  // 从而触发 QQ 头像显示。但 getQQNick() 在未配置 QQ_API_KEY 时会调用
-  // clearNickIfFromQQInput() 清空昵称，故需覆盖该方法保留 QQ 号。
+  // 使用 MutationObserver 监听 DOM 变化，替代 setInterval 轮询
   useEffect(() => {
     const customize = () => {
       // 在整个文档中查找 Twikoo 表单（不局限于 containerRef）
@@ -149,8 +146,13 @@ export default function Comments() {
       });
     };
 
-    const interval = setInterval(customize, 500);
-    return () => clearInterval(interval);
+    // Use MutationObserver instead of setInterval polling
+    const observer = new MutationObserver(() => customize());
+    observer.observe(document.body, { childList: true, subtree: true });
+    // Run once immediately
+    customize();
+
+    return () => observer.disconnect();
   }, []);
 
   // 未配置 envId 时不渲染评论区

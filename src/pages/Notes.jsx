@@ -5,12 +5,14 @@ import { useI18n } from "../contexts/I18nContext.jsx";
 import { useNotesData } from "../contexts/NotesDataContext.jsx";
 import { formatDate } from "../lib/date.js";
 import { useViewCounts } from "../hooks/useViewCount.js";
+import SEO from "../components/SEO.jsx";
 
 export default function Notes() {
   const { t, lang } = useI18n();
   const { notes, noteCategories } = useNotesData();
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeTag, setActiveTag] = useState(null);
 
   // Build category list: ["All", ...from data, ...custom if missing]
   const customCats = ["Frontend", "Backend", "Algorithm", "Database", "Network", "Tools", "OS", "Other"];
@@ -20,6 +22,9 @@ export default function Notes() {
     let result = notes;
     if (activeCategory !== "All") {
       result = result.filter((n) => n.category === activeCategory);
+    }
+    if (activeTag) {
+      result = result.filter((n) => n.tags.includes(activeTag));
     }
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
@@ -31,7 +36,7 @@ export default function Notes() {
       );
     }
     return result;
-  }, [notes, activeCategory, searchQuery]);
+  }, [notes, activeCategory, activeTag, searchQuery]);
 
   const categoryLabel = (cat) => {
     if (cat === "All") return t("notes.all");
@@ -46,6 +51,7 @@ export default function Notes() {
 
   return (
     <div>
+      <SEO title={t("notes.title")} description={t("notes.subtitle")} />
       {/* Header */}
       <section className="max-w-5xl mx-auto px-6 pt-12 pb-8">
         <div className="flex items-center gap-2 mb-3">
@@ -62,6 +68,20 @@ export default function Notes() {
 
       {/* Filter + Search */}
       <section className="max-w-5xl mx-auto px-6 pb-8">
+        {activeTag && (
+          <div className="mb-3 flex items-center gap-2 text-sm text-muted">
+            <span>{lang === "zh" ? "标签筛选:" : "Tag filter:"}</span>
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-primary/10 text-primary text-xs font-medium">
+              #{activeTag}
+              <button
+                onClick={() => setActiveTag(null)}
+                className="hover:text-primary-active ml-0.5"
+              >
+                ✕
+              </button>
+            </span>
+          </div>
+        )}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-1 p-1 rounded-lg bg-surface-soft border border-hairline">
             {allCats.map((cat) => (
@@ -132,7 +152,16 @@ export default function Notes() {
                         {note.tags.map((tag) => (
                           <span
                             key={tag}
-                            className="px-2 py-0.5 rounded text-xs text-muted bg-surface-card"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setActiveTag(activeTag === tag ? null : tag);
+                            }}
+                            className={`px-2 py-0.5 rounded text-xs cursor-pointer transition-colors ${
+                              activeTag === tag
+                                ? "bg-primary/20 text-primary font-medium"
+                                : "text-muted bg-surface-card hover:bg-primary/10 hover:text-primary"
+                            }`}
                           >
                             #{tag}
                           </span>

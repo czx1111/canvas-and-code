@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
 import { Home, ArrowLeft } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
+import SEO from "../components/SEO.jsx";
 
 export default function NotFound() {
   const { lang } = useI18n();
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-24 text-center">
+      <SEO title="404" description="Page not found" />
       <p className="font-display text-7xl md:text-8xl text-primary mb-4">404</p>
       <p className="font-display text-2xl text-ink mb-2">
         {lang === "zh" ? "页面走丢了" : "Page not found"}

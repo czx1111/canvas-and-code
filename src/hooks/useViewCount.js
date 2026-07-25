@@ -6,6 +6,7 @@ import {
 } from "../lib/supabase.js";
 
 const STORAGE_PREFIX = "view-count-";
+const SESSION_PREFIX = "viewed-";
 
 // ── localStorage helpers (fallback) ─────────────────────
 
@@ -53,15 +54,30 @@ export function useViewCount(key) {
 
     async function run() {
       try {
+        // Prevent duplicate counting within the same session
+        const sessionKey = `${SESSION_PREFIX}${key}`;
+        const alreadyViewed = sessionStorage.getItem(sessionKey);
+
         if (isSupabaseConfigured) {
-          const newCount = await incrementViewCount(key);
-          if (!cancelled) {
-            setCount(newCount);
-            setLoading(false);
+          if (alreadyViewed) {
+            // Already counted this session — just fetch current count
+            const counts = await fetchViewCounts([key]);
+            if (!cancelled) {
+              setCount(counts[key] || 0);
+              setLoading(false);
+            }
+          } else {
+            sessionStorage.setItem(sessionKey, "1");
+            const newCount = await incrementViewCount(key);
+            if (!cancelled) {
+              setCount(newCount);
+              setLoading(false);
+            }
           }
         } else {
           // Fallback to localStorage
-          const newCount = localIncrement(key);
+          const newCount = alreadyViewed ? localGet(key) : localIncrement(key);
+          if (!alreadyViewed) sessionStorage.setItem(sessionKey, "1");
           if (!cancelled) {
             setCount(newCount);
             setLoading(false);
