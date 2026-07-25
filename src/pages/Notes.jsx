@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Search, Clock, Tag, ArrowRight, BookOpen, Eye } from "lucide-react";
+import { Search, Clock, Tag, ArrowRight, BookOpen, Eye, ChevronDown } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 import { useNotesData } from "../contexts/NotesDataContext.jsx";
 import { formatDate } from "../lib/date.js";
@@ -13,6 +13,7 @@ export default function Notes() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTag, setActiveTag] = useState(null);
+  const [catsExpanded, setCatsExpanded] = useState(false);
 
   // Build category list: ["All", ...from data, ...custom if missing]
   const customCats = ["Frontend", "Backend", "Algorithm", "Database", "Network", "Tools", "OS", "Other"];
