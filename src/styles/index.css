@@ -348,13 +348,13 @@
   color: var(--color-primary) !important;
 }
 
-/* QQ 号提示文字 */
-.tk-qq-hint {
-  font-size: 12px;
-  color: var(--color-muted) !important;
-  margin-top: 4px;
-  padding: 0 4px;
-  line-height: 1.4;
+/* 评论框 placeholder 提示（QQ 号提示）— 更浅的颜色 */
+.tk-textarea .el-textarea__inner::placeholder,
+.tk-textarea textarea::placeholder,
+.tk-submit .el-textarea__inner::placeholder,
+.tk-submit textarea::placeholder {
+  color: var(--color-muted-soft, #b0aea8) !important;
+  opacity: 0.7 !important;
 }
 
 /* ── Reduced Motion: respect user preference ─────────── */

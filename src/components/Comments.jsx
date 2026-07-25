@@ -76,7 +76,7 @@ export default function Comments() {
       const metaInputs = document.querySelectorAll(".tk-meta-input");
       metaInputs.forEach((metaInput) => {
         // 跳过已定制的表单
-        if (metaInput.querySelector(".tk-qq-hint")) return;
+        if (metaInput.querySelector('input[name="nick"][data-qq-restrict]')) return;
 
         // 1. 覆盖 clearNickIfFromQQInput
         const twikooEl = metaInput.closest(".twikoo");
@@ -138,11 +138,20 @@ export default function Comments() {
           if (mailWrapper) mailWrapper.style.display = "none";
         }
 
-        // 4. 添加提示文字
-        const hint = document.createElement("div");
-        hint.className = "tk-qq-hint";
-        hint.textContent = "输入QQ号将自动获取QQ头像";
-        metaInput.appendChild(hint);
+        // 4. 将 QQ 提示写入评论输入框 placeholder
+        const submit = metaInput.closest(".tk-submit");
+        if (submit) {
+          const textarea = submit.querySelector(".el-textarea__inner");
+          if (textarea && !textarea.dataset.qqHint) {
+            textarea.dataset.qqHint = "true";
+            const originalPlaceholder = textarea.placeholder || "";
+            textarea.placeholder =
+              (lang === "zh"
+                ? "输入QQ号将自动获取QQ头像\n"
+                : "Enter your QQ number to auto-fetch your avatar\n"
+              ) + originalPlaceholder;
+          }
+        }
       });
     };
 
