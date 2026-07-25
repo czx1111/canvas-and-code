@@ -2,15 +2,21 @@ import { Link } from "react-router-dom";
 import { useI18n } from "../contexts/I18nContext.jsx";
 
 export default function Footer() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const year = new Date().getFullYear();
 
   const navLinks = [
     { to: "/", label: t("nav.home") },
     { to: "/blog", label: t("nav.blog") },
     { to: "/notes", label: t("nav.notes") },
+    { to: "/tags", label: t("nav.tags") },
     { to: "/archive", label: t("nav.archive") },
     { to: "/about", label: t("nav.about") },
+  ];
+
+  const extraLinks = [
+    { to: "/links", label: lang === "zh" ? "友链" : "Links" },
+    { to: "/guestbook", label: lang === "zh" ? "留言板" : "Guestbook" },
   ];
 
   return (
@@ -73,16 +79,16 @@ export default function Footer() {
                   RSS
                 </a>
               </li>
-              <li>
-                <a
-                  href="https://twitter.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-muted hover:text-primary transition-colors"
-                >
-                  Twitter
-                </a>
-              </li>
+              {extraLinks.map((link) => (
+                <li key={link.to}>
+                  <Link
+                    to={link.to}
+                    className="text-sm text-muted hover:text-primary transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
               <li>
                 <a
                   href="https://linkedin.com"

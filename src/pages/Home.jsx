@@ -1,15 +1,27 @@
-import { Link } from "react-router-dom";
-import { ArrowRight, BookOpen, CodeXml, Palette, Lightbulb, Pen, Tag, Clock } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowRight, BookOpen, CodeXml, Palette, Lightbulb, Pen, Tag, Clock, Shuffle, Hash, MessageCircle, Link2 } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 import { useBlogData } from "../contexts/BlogDataContext.jsx";
 import { formatDate } from "../lib/date.js";
+import { posts as allPosts } from "../generated/posts-data.js";
+import { notes as allNotes } from "../generated/notes-data.js";
 import PostCard from "../components/PostCard.jsx";
 import ReadingHistory from "../components/ReadingHistory.jsx";
+import PopularPosts from "../components/PopularPosts.jsx";
 import SEO from "../components/SEO.jsx";
 
 export default function Home() {
   const { t, lang } = useI18n();
   const { posts } = useBlogData();
+  const navigate = useNavigate();
+
+  const handleRandomArticle = () => {
+    const all = [...allPosts, ...allNotes];
+    if (all.length === 0) return;
+    const random = all[Math.floor(Math.random() * all.length)];
+    const path = allPosts.includes(random) ? `/post/${random.slug}` : `/note/${random.slug}`;
+    navigate(path);
+  };
 
   const featured = posts.find((p) => p.featured) || posts[0];
   const recent = posts.filter((p) => p !== featured).slice(0, 3);
@@ -154,6 +166,60 @@ export default function Home() {
           </div>
         </section>
       )}
+
+      {/* Popular Posts */}
+      <section className="max-w-5xl mx-auto px-6 pb-20">
+        <PopularPosts />
+      </section>
+
+      {/* Random Article + Quick Links */}
+      <section className="max-w-5xl mx-auto px-6 pb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Random Article */}
+          <button
+            onClick={handleRandomArticle}
+            className="group flex items-center gap-4 p-5 rounded-xl border border-hairline bg-surface-soft/50 hover:bg-surface-soft hover:border-hairline transition-all hover:-translate-y-0.5 hover:shadow-sm text-left"
+          >
+            <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-accent-teal/10 text-accent-teal flex-shrink-0">
+              <Shuffle className="w-5 h-5" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-medium text-ink mb-0.5">
+                {lang === "zh" ? "随机一文" : "Random Article"}
+              </h3>
+              <p className="text-sm text-muted leading-relaxed">
+                {lang === "zh" ? "不知道看什么？试试手气" : "Don't know what to read? Try your luck"}
+              </p>
+            </div>
+            <ArrowRight className="w-4 h-4 text-muted group-hover:text-primary transition-colors flex-shrink-0" />
+          </button>
+
+          {/* Quick Links */}
+          <div className="flex items-center gap-2 p-5 rounded-xl border border-hairline bg-surface-soft/50">
+            <Link
+              to="/tags"
+              className="flex flex-col items-center gap-1.5 flex-1 p-2 rounded-lg hover:bg-surface-soft transition-colors group"
+            >
+              <Hash className="w-5 h-5 text-muted group-hover:text-primary transition-colors" />
+              <span className="text-xs text-muted group-hover:text-ink transition-colors">{lang === "zh" ? "标签" : "Tags"}</span>
+            </Link>
+            <Link
+              to="/links"
+              className="flex flex-col items-center gap-1.5 flex-1 p-2 rounded-lg hover:bg-surface-soft transition-colors group"
+            >
+              <Link2 className="w-5 h-5 text-muted group-hover:text-primary transition-colors" />
+              <span className="text-xs text-muted group-hover:text-ink transition-colors">{lang === "zh" ? "友链" : "Links"}</span>
+            </Link>
+            <Link
+              to="/guestbook"
+              className="flex flex-col items-center gap-1.5 flex-1 p-2 rounded-lg hover:bg-surface-soft transition-colors group"
+            >
+              <MessageCircle className="w-5 h-5 text-muted group-hover:text-primary transition-colors" />
+              <span className="text-xs text-muted group-hover:text-ink transition-colors">{lang === "zh" ? "留言" : "Guest"}</span>
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* Reading History */}
       <section className="max-w-5xl mx-auto px-6 pb-20">

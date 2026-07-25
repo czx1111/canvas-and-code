@@ -15,6 +15,9 @@ const Blog = lazy(() => import("./pages/Blog.jsx"));
 const PostDetail = lazy(() => import("./pages/PostDetail.jsx"));
 const Notes = lazy(() => import("./pages/Notes.jsx"));
 const NoteDetail = lazy(() => import("./pages/NoteDetail.jsx"));
+const Tags = lazy(() => import("./pages/Tags.jsx"));
+const FriendLinks = lazy(() => import("./pages/FriendLinks.jsx"));
+const Guestbook = lazy(() => import("./pages/Guestbook.jsx"));
 const About = lazy(() => import("./pages/About.jsx"));
 const Archive = lazy(() => import("./pages/Archive.jsx"));
 const NotFound = lazy(() => import("./pages/NotFound.jsx"));
@@ -55,6 +58,9 @@ export default function App() {
               <Route path="/post/:slug" element={<PostDetail />} />
               <Route path="/notes" element={<Notes />} />
               <Route path="/note/:slug" element={<NoteDetail />} />
+              <Route path="/tags" element={<Tags />} />
+              <Route path="/links" element={<FriendLinks />} />
+              <Route path="/guestbook" element={<Guestbook />} />
               <Route path="/about" element={<About />} />
               <Route path="/archive" element={<Archive />} />
               <Route path="*" element={<NotFound />} />
