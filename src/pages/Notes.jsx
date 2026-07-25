@@ -82,30 +82,32 @@ export default function Notes() {
             </span>
           </div>
         )}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-1 p-1 rounded-lg bg-surface-soft border border-hairline">
+        <div className="flex flex-col gap-4">
+          {/* Category pills */}
+          <div className="flex flex-wrap items-center gap-2">
             {allCats.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                   activeCategory === cat
-                    ? "bg-canvas text-primary shadow-sm"
-                    : "text-muted hover:text-ink"
+                    ? "bg-primary text-white"
+                    : "bg-surface-soft text-muted hover:text-ink border border-hairline"
                 }`}
               >
                 {categoryLabel(cat)}
               </button>
             ))}
           </div>
-          <div className="relative">
+          {/* Search */}
+          <div className="relative max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
             <input
               type="text"
               placeholder={t("notes.searchPlaceholder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 pr-4 py-2 rounded-lg border border-hairline bg-surface-soft text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary w-64"
+              className="w-full pl-9 pr-4 py-2 rounded-lg border border-hairline bg-surface-soft text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
             />
           </div>
         </div>
