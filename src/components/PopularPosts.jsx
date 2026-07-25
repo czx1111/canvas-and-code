@@ -4,7 +4,6 @@ import { TrendingUp, Eye, Flame } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 import { useNotesData } from "../contexts/NotesDataContext.jsx";
 import { useViewCounts } from "../hooks/useViewCount.js";
-import { getCategoryLabel } from "../lib/categories.js";
 
 /**
  * PopularPosts — displays top-viewed notes on the home page.
@@ -78,7 +77,7 @@ export default function PopularPosts() {
               <h3 className="text-sm font-medium text-ink group-hover:text-primary transition-colors truncate">
                 {getTitle(note)}
               </h3>
-              <p className="text-xs text-muted mt-0.5">{getCategoryLabel(note.category, lang)}</p>
+              <p className="text-xs text-muted mt-0.5">{note.category}</p>
             </div>
 
             {/* View count */}

@@ -2,7 +2,6 @@ import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Calendar } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
-import { getCategoryLabel as getNoteCategoryLabel } from "../lib/categories.js";
 
 /**
  * Timeline — vertical timeline of articles grouped by year.
@@ -76,8 +75,11 @@ export default function Timeline({ items, basePath = "/post" }) {
                       {getTitle(item)}
                     </p>
                     {item.category && (() => {
-                      const noteLabel = getNoteCategoryLabel(item.category, lang);
-                      const label = noteLabel !== item.category ? noteLabel : (t(`common.categories.${item.category}`) !== `common.categories.${item.category}` ? t(`common.categories.${item.category}`) : item.category);
+                      const commonCat = t(`common.categories.${item.category}`);
+                      const noteCat = t(`notes.categories.${item.category}`);
+                      const commonKey = `common.categories.${item.category}`;
+                      const noteKey = `notes.categories.${item.category}`;
+                      const label = commonCat !== commonKey ? commonCat : noteCat !== noteKey ? noteCat : item.category;
                       return <span className="text-xs text-muted">{label}</span>;
                     })()}
                   </div>

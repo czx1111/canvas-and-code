@@ -5,7 +5,6 @@ import { posts as allPosts } from "../generated/posts-data.js";
 import { notes as allNotes } from "../generated/notes-data.js";
 import { useI18n } from "../contexts/I18nContext.jsx";
 import { formatDate } from "../lib/date.js";
-import { getCategoryLabel as getNoteCategoryLabel } from "../lib/categories.js";
 import SEO from "../components/SEO.jsx";
 
 /**
@@ -72,10 +71,8 @@ export default function Tags() {
 
   const getTitle = (item) => (lang === "zh" && item.titleZh ? item.titleZh : item.title);
   const getCategoryLabel = (cat) => {
-    const noteLabel = getNoteCategoryLabel(cat, lang);
-    if (noteLabel !== cat) return noteLabel;
-    const commonLabel = t(`common.categories.${cat}`);
-    return commonLabel !== `common.categories.${cat}` ? commonLabel : cat;
+    const label = t(`notes.categories.${cat}`);
+    return label !== `notes.categories.${cat}` ? label : t(`common.categories.${cat}`) !== `common.categories.${cat}` ? t(`common.categories.${cat}`) : cat;
   };
 
   return (

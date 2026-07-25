@@ -5,7 +5,6 @@ import { useI18n } from "../contexts/I18nContext.jsx";
 import { useNotesData } from "../contexts/NotesDataContext.jsx";
 import { formatDate } from "../lib/date.js";
 import { useViewCounts } from "../hooks/useViewCount.js";
-import { getMergedCategoryKeys, getCategoryLabel, getCategoryConfig } from "../lib/categories.js";
 import SEO from "../components/SEO.jsx";
 
 export default function Notes() {
@@ -15,17 +14,9 @@ export default function Notes() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTag, setActiveTag] = useState(null);
 
-  // Build category list: ["All", ...merged from config + data]
-  const allCats = useMemo(() => ["All", ...getMergedCategoryKeys(noteCategories)], [noteCategories]);
-
-  // Count notes per category
-  const categoryCounts = useMemo(() => {
-    const counts = {};
-    for (const note of notes) {
-      counts[note.category] = (counts[note.category] || 0) + 1;
-    }
-    return counts;
-  }, [notes]);
+  // Build category list: ["All", ...from data, ...custom if missing]
+  const customCats = ["Frontend", "Backend", "Algorithm", "Database", "Network", "Tools", "OS", "Other"];
+  const allCats = ["All", ...new Set([...noteCategories, ...customCats])];
 
   const filtered = useMemo(() => {
     let result = notes;
@@ -49,7 +40,9 @@ export default function Notes() {
 
   const categoryLabel = (cat) => {
     if (cat === "All") return t("notes.all");
-    return getCategoryLabel(cat, lang);
+    return t(`notes.categories.${cat}`) !== `notes.categories.${cat}`
+      ? t(`notes.categories.${cat}`)
+      : cat;
   };
 
   // Batch fetch view counts for all notes
@@ -90,36 +83,32 @@ export default function Notes() {
           </div>
         )}
         <div className="flex flex-col gap-4">
-          {/* Category pills */}
+          {/* Category pills — collapsed shows top 5, expandable */}
           <div className="flex flex-wrap items-center gap-2">
-            {allCats.map((cat) => {
-              const count = cat === "All" ? notes.length : (categoryCounts[cat] || 0);
-              const isActive = activeCategory === cat;
-              return (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                    isActive
-                      ? "bg-primary text-white"
-                      : "bg-surface-soft text-muted hover:text-ink border border-hairline"
-                  }`}
-                >
-                  {categoryLabel(cat)}
-                  {count > 0 && (
-                    <span
-                      className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
-                        isActive
-                          ? "bg-white/20 text-white"
-                          : "bg-surface-card text-muted"
-                      }`}
-                    >
-                      {count}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
+            {(catsExpanded ? allCats : allCats.slice(0, 5)).map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                  activeCategory === cat
+                    ? "bg-primary text-white"
+                    : "bg-surface-soft text-muted hover:text-ink border border-hairline"
+                }`}
+              >
+                {categoryLabel(cat)}
+              </button>
+            ))}
+            {allCats.length > 5 && (
+              <button
+                onClick={() => setCatsExpanded((e) => !e)}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium text-muted hover:text-ink border border-hairline bg-surface-soft transition-colors"
+              >
+                {catsExpanded
+                  ? (lang === "zh" ? "收起" : "Less")
+                  : `+${allCats.length - 5}`}
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${catsExpanded ? "rotate-180" : ""}`} />
+              </button>
+            )}
           </div>
           {/* Search */}
           <div className="relative max-w-md">
@@ -141,9 +130,9 @@ export default function Notes() {
           <div className="flex flex-col gap-3">
             {filtered.map((note, i) => {
               const title = lang === "zh" && note.titleZh ? note.titleZh : note.title;
-              const catLabel = getCategoryLabel(note.category, lang);
-              const catConfig = getCategoryConfig(note.category);
-              const CatIcon = catConfig.icon;
+              const catLabel = t(`notes.categories.${note.category}`) !== `notes.categories.${note.category}`
+                ? t(`notes.categories.${note.category}`)
+                : note.category;
               return (
                 <Link
                   key={note.slug}
@@ -155,7 +144,7 @@ export default function Notes() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-2">
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 text-xs font-medium text-primary">
-                        {CatIcon && <CatIcon className="w-2.5 h-2.5" />}
+                        <Tag className="w-2.5 h-2.5" />
                         {catLabel}
                       </span>
                       <span className="flex items-center gap-1 text-xs text-muted">
