@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Github, Rss, Linkedin } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 
 export default function Footer() {
@@ -9,24 +10,30 @@ export default function Footer() {
     { to: "/", label: t("nav.home") },
     { to: "/blog", label: t("nav.blog") },
     { to: "/notes", label: t("nav.notes") },
-    { to: "/tags", label: t("nav.tags") },
-    { to: "/archive", label: t("nav.archive") },
     { to: "/about", label: t("nav.about") },
   ];
 
-  const extraLinks = [
-    { to: "/links", label: lang === "zh" ? "友链" : "Links" },
-    { to: "/guestbook", label: lang === "zh" ? "留言板" : "Guestbook" },
+  const exploreLinks = [
+    { to: "/tags", label: t("nav.tags") },
+    { to: "/archive", label: t("nav.archive") },
     { to: "/projects", label: lang === "zh" ? "项目" : "Projects" },
     { to: "/changelog", label: lang === "zh" ? "更新日志" : "Changelog" },
+    { to: "/links", label: lang === "zh" ? "友链" : "Links" },
+    { to: "/guestbook", label: lang === "zh" ? "留言板" : "Guestbook" },
+  ];
+
+  const socialLinks = [
+    { href: "https://github.com/czx1111", label: "GitHub", icon: Github },
+    { href: "./feed.xml", label: "RSS", icon: Rss },
+    { href: "https://linkedin.com", label: "LinkedIn", icon: Linkedin },
   ];
 
   return (
     <footer className="border-t border-hairline bg-canvas">
       <div className="max-w-5xl mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {/* Brand */}
-          <div>
+          <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
               <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
                 <span className="text-white font-display text-xs font-bold">C</span>
@@ -57,31 +64,13 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Connect */}
+          {/* Explore */}
           <div>
             <h4 className="text-sm font-semibold text-ink mb-3 uppercase tracking-wider">
-              {t("footer.social")}
+              {lang === "zh" ? "探索" : "Explore"}
             </h4>
             <ul className="space-y-2">
-              <li>
-                <a
-                  href="https://github.com/czx1111"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-muted hover:text-primary transition-colors"
-                >
-                  GitHub
-                </a>
-              </li>
-              <li>
-                <a
-                  href="./feed.xml"
-                  className="text-sm text-muted hover:text-primary transition-colors"
-                >
-                  RSS
-                </a>
-              </li>
-              {extraLinks.map((link) => (
+              {exploreLinks.map((link) => (
                 <li key={link.to}>
                   <Link
                     to={link.to}
@@ -91,16 +80,28 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
-              <li>
-                <a
-                  href="https://linkedin.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-muted hover:text-primary transition-colors"
-                >
-                  LinkedIn
-                </a>
-              </li>
+            </ul>
+          </div>
+
+          {/* Connect */}
+          <div>
+            <h4 className="text-sm font-semibold text-ink mb-3 uppercase tracking-wider">
+              {t("footer.social")}
+            </h4>
+            <ul className="space-y-2">
+              {socialLinks.map((link) => (
+                <li key={link.label}>
+                  <a
+                    href={link.href}
+                    target={link.href.startsWith("http") ? "_blank" : undefined}
+                    rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    className="flex items-center gap-2 text-sm text-muted hover:text-primary transition-colors"
+                  >
+                    <link.icon className="w-3.5 h-3.5" />
+                    {link.label}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
         </div>

@@ -138,10 +138,11 @@ export default function Navbar({ onSearchOpen }) {
           {/* Language Switcher */}
           <button
             onClick={toggleLang}
-            className="p-2 rounded-lg text-sm font-medium transition-colors text-body hover:bg-surface-soft hover:text-ink"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-colors text-body hover:bg-surface-soft hover:text-ink"
+            title={lang === "zh" ? "切换语言" : "Switch language"}
           >
             <Globe className="w-4 h-4" />
-            <span className="text-xs font-semibold ml-1">{lang === "en" ? "EN" : "中"}</span>
+            <span className="text-xs font-bold">{lang === "en" ? "EN" : "中"}</span>
           </button>
         </div>
 
