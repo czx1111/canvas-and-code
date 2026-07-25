@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Clock, Tag, Share2, Check, Twitter, Github, Linkedin } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
@@ -6,14 +6,28 @@ import { useBlogData } from "../contexts/BlogDataContext.jsx";
 import { formatDate } from "../lib/date.js";
 import ArticleLayout from "../components/ArticleLayout.jsx";
 import SEO from "../components/SEO.jsx";
+import { useReadingHistory } from "../hooks/useReadingHistory.js";
 
 export default function PostDetail() {
   const { slug } = useParams();
   const { t, lang } = useI18n();
   const { posts } = useBlogData();
   const [copied, setCopied] = useState(false);
+  const { addEntry } = useReadingHistory();
 
   const post = posts.find((p) => p.slug === slug);
+
+  // Track reading history
+  useEffect(() => {
+    if (post) {
+      addEntry({
+        slug: post.slug,
+        type: "post",
+        title: lang === "zh" && post.titleZh ? post.titleZh : post.title,
+        date: post.date,
+      });
+    }
+  }, [post, addEntry, lang]);
   const currentIndex = posts.findIndex((p) => p.slug === slug);
   const prevPost = currentIndex > 0 ? posts[currentIndex - 1] : null;
   const nextPost = currentIndex >= 0 && currentIndex < posts.length - 1 ? posts[currentIndex + 1] : null;
@@ -146,6 +160,9 @@ export default function PostDetail() {
       prev={prevPost}
       next={nextPost}
       basePath="/post"
+      currentSlug={post.slug}
+      category={post.category}
+      seriesId={post.series}
     >
       <SEO title={title} description={post.excerpt} ogType="article" ogImage={post.coverImage} />
     </ArticleLayout>

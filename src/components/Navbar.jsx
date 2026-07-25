@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Globe, House, BookOpen, User, NotebookPen, Sun, Moon } from "lucide-react";
+import { Menu, X, Globe, House, BookOpen, User, NotebookPen, Sun, Moon, Search, Archive } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 import { useTheme } from "../contexts/ThemeContext.jsx";
 
-export default function Navbar() {
+export default function Navbar({ onSearchOpen }) {
   const { t, lang, toggleLang } = useI18n();
   const { theme, toggleTheme } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -14,6 +14,7 @@ export default function Navbar() {
     { to: "/", label: t("nav.home"), icon: House },
     { to: "/blog", label: t("nav.blog"), icon: BookOpen },
     { to: "/notes", label: t("nav.notes"), icon: NotebookPen },
+    { to: "/archive", label: t("nav.archive"), icon: Archive },
     { to: "/about", label: t("nav.about"), icon: User },
   ];
 
@@ -49,6 +50,14 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+          {/* Search Button */}
+          <button
+            onClick={onSearchOpen}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors border border-transparent text-body hover:bg-surface-soft hover:text-ink"
+            title={lang === "zh" ? "搜索 (Ctrl+K)" : "Search (Ctrl+K)"}
+          >
+            <Search className="w-4 h-4" />
+          </button>
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
@@ -69,6 +78,12 @@ export default function Navbar() {
 
         {/* Mobile */}
         <div className="flex items-center gap-1 md:hidden">
+          <button
+            onClick={onSearchOpen}
+            className="p-2 rounded-lg text-body hover:bg-surface-soft"
+          >
+            <Search className="w-4 h-4" />
+          </button>
           <button
             onClick={toggleTheme}
             className="p-2 rounded-lg text-body hover:bg-surface-soft"

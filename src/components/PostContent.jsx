@@ -1,16 +1,25 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import rehypeHighlight from "rehype-highlight";
 import { Link } from "react-router-dom";
 import { slugify, extractTextFromChildren } from "../lib/toc.js";
-import { Check, Copy } from "lucide-react";
+import { Check, Copy, ChevronDown, Terminal } from "lucide-react";
+import Lightbox from "./Lightbox.jsx";
 
-/** CodeBlock — wraps <pre> with a copy-to-clipboard button */
-function CodeBlock({ children }) {
+/** CodeBlock — wraps <pre> with copy button, language tag, line numbers, and collapse */
+function CodeBlock({ children, className }) {
   const [copied, setCopied] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
   const preRef = useRef(null);
+
+  // Extract language from className (e.g. "language-js")
+  const language = useMemo(() => {
+    if (!className) return null;
+    const match = className.match(/language-(\w+)/);
+    return match ? match[1] : null;
+  }, [className]);
 
   const handleCopy = useCallback(() => {
     const text = preRef.current?.textContent || "";
@@ -20,27 +29,84 @@ function CodeBlock({ children }) {
         setTimeout(() => setCopied(false), 2000);
       })
       .catch(() => {
-        // 在不安全上下文（如 HTTP）中剪贴板 API 不可用，静默处理
+        // Clipboard API may not be available in insecure contexts
       });
   }, []);
 
+  // Count lines for line numbers
+  const lineCount = useMemo(() => {
+    const text = preRef.current?.textContent || "";
+    return text.split("\n").length;
+  }, [children]);
+
   return (
-    <div className="relative group my-lg">
-      <button
-        onClick={handleCopy}
-        className="absolute top-3 right-3 p-1.5 rounded-md bg-surface-card/80 backdrop-blur-sm text-muted hover:text-primary transition-all opacity-0 group-hover:opacity-100 z-10"
-        title="Copy code"
-      >
-        {copied ? <Check className="w-3.5 h-3.5 text-success" /> : <Copy className="w-3.5 h-3.5" />}
-      </button>
-      <pre
-        ref={preRef}
-        className="border-l-4 border-primary/30 rounded-r-md p-lg overflow-x-auto text-sm leading-relaxed font-mono"
-        style={{ backgroundColor: "var(--color-code-bg)", color: "var(--color-code-text)" }}
-      >
-        {children}
-      </pre>
+    <div className="relative group my-lg rounded-lg border border-hairline overflow-hidden">
+      {/* Header bar */}
+      <div className="flex items-center justify-between px-4 py-1.5 bg-surface-soft border-b border-hairline">
+        <div className="flex items-center gap-2">
+          <Terminal className="w-3.5 h-3.5 text-muted" />
+          <span className="text-xs font-mono text-muted uppercase tracking-wide">
+            {language || "code"}
+          </span>
+        </div>
+        <div className="flex items-center gap-1">
+          {lineCount > 20 && (
+            <button
+              onClick={() => setCollapsed((c) => !c)}
+              className="p-1 rounded text-muted hover:text-ink transition-colors"
+              title={collapsed ? "Expand" : "Collapse"}
+            >
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${collapsed ? "-rotate-90" : ""}`} />
+            </button>
+          )}
+          <button
+            onClick={handleCopy}
+            className="p-1 rounded text-muted hover:text-ink transition-colors"
+            title="Copy code"
+          >
+            {copied ? <Check className="w-3.5 h-3.5 text-success" /> : <Copy className="w-3.5 h-3.5" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Code body */}
+      <div className={`relative ${collapsed ? "max-h-24 overflow-hidden" : ""}`}>
+        {collapsed && (
+          <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+        )}
+        <pre
+          ref={preRef}
+          className="p-lg overflow-x-auto text-sm leading-relaxed font-mono"
+          style={{ backgroundColor: "var(--color-code-bg)", color: "var(--color-code-text)" }}
+        >
+          {children}
+        </pre>
+      </div>
     </div>
+  );
+}
+
+/** ImageWithLightbox — wraps img with click-to-zoom lightbox */
+function ImageWithLightbox({ src, alt }) {
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+
+  return (
+    <>
+      <img
+        src={src}
+        alt={alt || ""}
+        className="w-full rounded-lg my-lg border border-hairline cursor-zoom-in hover:opacity-90 transition-opacity"
+        loading="lazy"
+        onClick={() => setLightboxOpen(true)}
+      />
+      {lightboxOpen && (
+        <Lightbox
+          images={[{ src, alt: alt || "" }]}
+          initialIndex={0}
+          onClose={() => setLightboxOpen(false)}
+        />
+      )}
+    </>
   );
 }
 
@@ -121,16 +187,11 @@ export default function PostContent({ content }) {
             }
             return <code className={`font-mono ${className || ""}`}>{children}</code>;
           },
-          pre: ({ children }) => (
-            <CodeBlock>{children}</CodeBlock>
+          pre: ({ children, className }) => (
+            <CodeBlock className={className}>{children}</CodeBlock>
           ),
           img: ({ src, alt }) => (
-            <img
-              src={src}
-              alt={alt || ""}
-              className="w-full rounded-lg my-lg border border-hairline"
-              loading="lazy"
-            />
+            <ImageWithLightbox src={src} alt={alt} />
           ),
           hr: () => <hr className="border-hairline my-xl" />,
           table: ({ children }) => (

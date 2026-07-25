@@ -423,3 +423,31 @@
     color: black !important;
   }
 }
+
+/* ── Theme Transition Animation ─────────────────────────── */
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, fill 0.4s ease, stroke 0.4s ease !important;
+  transition-delay: 0 !important;
+}
+
+/* ── Search Modal Animation ────────────────────────────── */
+@keyframes search-modal-in {
+  from { opacity: 0; transform: scale(0.96) translateY(-8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ── Line Clamp Utility ────────────────────────────────── */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Code Block Collapse Gradient ──────────────────────── */
+.group:hover .code-collapse-hint {
+  opacity: 1;
+}

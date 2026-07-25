@@ -5,13 +5,15 @@ import TableOfContents from "./TableOfContents.jsx";
 import ReadingProgress from "./ReadingProgress.jsx";
 import PostNav from "./PostNav.jsx";
 import Comments from "./Comments.jsx";
+import RelatedPosts from "./RelatedPosts.jsx";
+import PostSeries from "./PostSeries.jsx";
 
 /**
  * ArticleLayout — shared layout for PostDetail and NoteDetail.
  *
  * Extracts the common structure: reading progress bar, back link,
  * article header, TOC (mobile + desktop sidebar), content body,
- * footer, prev/next nav, and comments.
+ * footer, prev/next nav, related posts, and comments.
  *
  * @param {object} props
  * @param {string} props.backTo — route path for back link (e.g. "/blog")
@@ -24,6 +26,9 @@ import Comments from "./Comments.jsx";
  * @param {object} [props.next] — next article data
  * @param {string} [props.basePath="/post"] — base path for prev/next links
  * @param {React.ReactNode} [props.children] — additional content (e.g. SEO)
+ * @param {string} [props.currentSlug] — slug of current article (for related posts)
+ * @param {string} [props.category] — category of current article (for related posts)
+ * @param {string} [props.seriesId] — series identifier (optional, for PostSeries)
  */
 export default function ArticleLayout({
   backTo,
@@ -35,6 +40,9 @@ export default function ArticleLayout({
   prev,
   next,
   basePath = "/post",
+  currentSlug,
+  category,
+  seriesId,
   children,
 }) {
   return (
@@ -58,12 +66,22 @@ export default function ArticleLayout({
           {/* Cover Image */}
           {coverImage}
 
+          {/* Series navigation (before content) */}
+          {seriesId && currentSlug && (
+            <PostSeries seriesId={seriesId} currentSlug={currentSlug} />
+          )}
+
           {/* Content */}
           <TableOfContents content={content} variant="mobile" />
           <PostContent content={content} />
 
           {/* Footer */}
           {footer && <footer className="mt-12 pt-8 border-t border-hairline">{footer}</footer>}
+
+          {/* Related Posts */}
+          {currentSlug && category && (
+            <RelatedPosts currentSlug={currentSlug} category={category} />
+          )}
 
           {/* Prev / Next */}
           <div className="mt-8">

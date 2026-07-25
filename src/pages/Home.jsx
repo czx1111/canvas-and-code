@@ -4,6 +4,8 @@ import { useI18n } from "../contexts/I18nContext.jsx";
 import { useBlogData } from "../contexts/BlogDataContext.jsx";
 import { formatDate } from "../lib/date.js";
 import PostCard from "../components/PostCard.jsx";
+import TagCloud from "../components/TagCloud.jsx";
+import ReadingHistory from "../components/ReadingHistory.jsx";
 import SEO from "../components/SEO.jsx";
 
 export default function Home() {
@@ -153,6 +155,23 @@ export default function Home() {
           </div>
         </section>
       )}
+
+      {/* Tags + Reading History */}
+      <section className="max-w-5xl mx-auto px-6 pb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Tag Cloud */}
+          <div className="rounded-lg border border-hairline bg-surface-card p-5">
+            <h3 className="flex items-center gap-2 font-display text-base font-semibold text-ink mb-4">
+              <Tag className="w-4 h-4 text-primary" />
+              {t("home.tagsTitle")}
+            </h3>
+            <TagCloud basePath="/notes" />
+          </div>
+
+          {/* Reading History */}
+          <ReadingHistory />
+        </div>
+      </section>
 
     </div>
   );

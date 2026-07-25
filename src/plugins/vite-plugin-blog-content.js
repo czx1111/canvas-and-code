@@ -47,6 +47,10 @@ export function blogContentPlugin() {
         contentZh = zhBody;
       }
 
+      // Auto-calculate read time if not specified in frontmatter
+      const wordCount = countWords(content);
+      const autoReadTime = fm.readTime || `${Math.max(1, Math.ceil(wordCount / 200))} min`;
+
       return {
         slug: fm.slug || baseName,
         title: fm.title || baseName,
@@ -55,13 +59,15 @@ export function blogContentPlugin() {
         excerptZh: fm.excerptZh || "",
         category: fm.category || "Thoughts",
         date: fm.date || "",
-        readTime: fm.readTime || "5 min",
+        readTime: autoReadTime,
         coverImage:
           fm.coverImage ||
           `https://picsum.photos/seed/${encodeURIComponent(
             fm.slug || fm.category || "blog"
           )}/800/400`,
         featured: fm.featured || false,
+        series: fm.series || "",
+        seriesOrder: fm.seriesOrder || 0,
         content,
         contentZh,
       };
@@ -109,13 +115,17 @@ export const posts = ${JSON.stringify(posts, null, 2)};
         contentZh = zhBody;
       }
 
+      // Auto-calculate read time for notes too
+      const noteWordCount = countWords(content);
+      const noteAutoReadTime = fm.readTime || `${Math.max(1, Math.ceil(noteWordCount / 200))} min`;
+
       return {
         slug: fm.slug || baseName,
         title: fm.title || baseName,
         titleZh: fm.titleZh || "",
         category: fm.category || "Other",
         date: fm.date || "",
-        readTime: fm.readTime || "2 min",
+        readTime: noteAutoReadTime,
         tags: Array.isArray(fm.tags) ? fm.tags : [],
         content,
         contentZh,

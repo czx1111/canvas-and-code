@@ -7,6 +7,7 @@ export const translations = {
       notes: "Notes",
       about: "About",
       source: "Source",
+      archive: "Archive",
     },
     // Home
     home: {
@@ -24,6 +25,8 @@ export const translations = {
       catDesignDesc: "Visual thinking, interfaces, and the warmth of good design",
       catThoughts: "Thoughts",
       catThoughtsDesc: "Ideas, inspiration, and the spaces in between",
+      tagsTitle: "Tags",
+      historyTitle: "Recently Viewed",
     },
     // Blog
     blog: {
@@ -114,6 +117,7 @@ export const translations = {
       notes: "随笔",
       about: "关于",
       source: "源码",
+      archive: "归档",
     },
     // Home
     home: {
@@ -131,6 +135,8 @@ export const translations = {
       catDesignDesc: "视觉思维、界面与好设计的温暖",
       catThoughts: "思考",
       catThoughtsDesc: "想法、灵感与之间的空间",
+      tagsTitle: "标签",
+      historyTitle: "最近浏览",
     },
     // Blog
     blog: {

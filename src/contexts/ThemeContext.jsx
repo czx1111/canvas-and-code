@@ -15,12 +15,17 @@ export function ThemeProvider({ children }) {
 
   useEffect(() => {
     const root = document.documentElement;
+    // Add transition class before theme change for smooth animation
+    root.classList.add("theme-transition");
     if (theme === "dark") {
       root.classList.add("dark");
     } else {
       root.classList.remove("dark");
     }
     localStorage.setItem("blog-theme", theme);
+    // Remove transition class after animation completes
+    const timer = setTimeout(() => root.classList.remove("theme-transition"), 400);
+    return () => clearTimeout(timer);
   }, [theme]);
 
   // Follow system theme changes when user hasn't explicitly chosen a theme

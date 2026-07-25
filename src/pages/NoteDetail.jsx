@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { useEffect } from "react";
 import { ArrowLeft, Clock, Tag, Eye } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 import { useNotesData } from "../contexts/NotesDataContext.jsx";
@@ -6,6 +7,7 @@ import { formatDate } from "../lib/date.js";
 import { useViewCount } from "../hooks/useViewCount.js";
 import ArticleLayout from "../components/ArticleLayout.jsx";
 import SEO from "../components/SEO.jsx";
+import { useReadingHistory } from "../hooks/useReadingHistory.js";
 
 export default function NoteDetail() {
   const { slug } = useParams();
@@ -17,6 +19,19 @@ export default function NoteDetail() {
   const prevNote = currentIndex > 0 ? notes[currentIndex - 1] : null;
   const nextNote = currentIndex >= 0 && currentIndex < notes.length - 1 ? notes[currentIndex + 1] : null;
   const { count: viewCount } = useViewCount(note ? slug : null);
+  const { addEntry } = useReadingHistory();
+
+  // Track reading history
+  useEffect(() => {
+    if (note) {
+      addEntry({
+        slug: note.slug,
+        type: "note",
+        title: lang === "zh" && note.titleZh ? note.titleZh : note.title,
+        date: note.date,
+      });
+    }
+  }, [note, addEntry, lang]);
 
   if (!note) {
     return (
@@ -98,6 +113,8 @@ export default function NoteDetail() {
       prev={prevNote}
       next={nextNote}
       basePath="/note"
+      currentSlug={note.slug}
+      category={note.category}
     >
       <SEO title={title} ogType="article" />
     </ArticleLayout>
