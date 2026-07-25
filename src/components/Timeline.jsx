@@ -74,11 +74,14 @@ export default function Timeline({ items, basePath = "/post" }) {
                     <p className="text-sm text-ink group-hover:text-primary transition-colors font-medium leading-snug">
                       {getTitle(item)}
                     </p>
-                    {item.category && (
-                      <span className="text-xs text-muted">
-                        {t(`common.categories.${item.category}`) || t(`notes.categories.${item.category}`) || item.category}
-                      </span>
-                    )}
+                    {item.category && (() => {
+                      const commonCat = t(`common.categories.${item.category}`);
+                      const noteCat = t(`notes.categories.${item.category}`);
+                      const commonKey = `common.categories.${item.category}`;
+                      const noteKey = `notes.categories.${item.category}`;
+                      const label = commonCat !== commonKey ? commonCat : noteCat !== noteKey ? noteCat : item.category;
+                      return <span className="text-xs text-muted">{label}</span>;
+                    })()}
                   </div>
                 </Link>
               ))}

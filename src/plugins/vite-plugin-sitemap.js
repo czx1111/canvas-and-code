@@ -8,7 +8,7 @@ import path from "path";
  * @param {object} options
  * @param {string} options.siteUrl — base URL of the site (e.g. "https://example.com")
  */
-export function sitemapPlugin({ siteUrl = "https://canvas-and-code.github.io" } = {}) {
+export function sitemapPlugin({ siteUrl = "https://czx1111.github.io/canvas-and-code" } = {}) {
   const root = process.cwd();
 
   function getDynamicRoutes() {
@@ -56,12 +56,13 @@ export function sitemapPlugin({ siteUrl = "https://canvas-and-code.github.io" } 
     xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
 
     for (const r of staticRoutes) {
-      xml += `  <url>\n    <loc>${base}${r}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+      const path = r === "/" ? "/#/" : `/#${r}`;
+      xml += `  <url>\n    <loc>${base}${path}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
     }
 
     for (const r of dynamicRoutes) {
       const lastmod = r.date || now;
-      xml += `  <url>\n    <loc>${base}${r.path}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.6</priority>\n  </url>\n`;
+      xml += `  <url>\n    <loc>${base}/#${r.path}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.6</priority>\n  </url>\n`;
     }
 
     xml += `</urlset>\n`;
