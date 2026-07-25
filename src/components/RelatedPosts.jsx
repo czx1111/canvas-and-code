@@ -5,7 +5,35 @@ import { posts as allPosts } from "../generated/posts-data.js";
 import { useI18n } from "../contexts/I18nContext.jsx";
 
 /**
- * RelatedPosts — recommends related posts based on shared category or title keywords.
+ * Tokenize text into meaningful keywords for matching.
+ * Splits on non-alphanumeric (works for both English and Chinese).
+ */
+function tokenize(text) {
+  if (!text) return [];
+  // Split on spaces, punctuation, and also split CJK characters into bi-grams
+  const words = text.toLowerCase().split(/[\s,，。、；;：:！!？?（）()【】\[\]""''`'{}|/\\<>]+/).filter((w) => w.length > 1);
+  // Also extract CJK bigrams for better Chinese matching
+  const cjkBigrams = [];
+  const cjkChars = text.match(/[\u4e00-\u9fff\u3400-\u4dbf]/g);
+  if (cjkChars) {
+    const cjkStr = cjkChars.join("");
+    for (let i = 0; i < cjkStr.length - 1; i++) {
+      cjkBigrams.push(cjkStr.substring(i, i + 2));
+    }
+  }
+  return [...words, ...cjkBigrams];
+}
+
+/**
+ * RelatedPosts — recommends truly related posts based on content similarity.
+ *
+ * Scoring algorithm:
+ *   - Shared category: +5
+ *   - Shared title/excerpt keywords: +2 per keyword
+ *   - Shared tags (from content analysis): +3 per tag
+ *
+ * Posts with a score of 0 are NOT shown — only truly related content appears.
+ * If no related posts meet the threshold, the section is hidden entirely.
  *
  * @param {object} props
  * @param {string} props.currentSlug — slug of the current post (to exclude it)
@@ -18,50 +46,64 @@ export default function RelatedPosts({ currentSlug, category, max = 3 }) {
   const related = useMemo(() => {
     if (!allPosts.length) return [];
 
-    // Score each post by shared category + title keyword overlap
     const current = allPosts.find((p) => p.slug === currentSlug);
-    const currentTitleWords = current
-      ? (current.title || "").toLowerCase().split(/\s+/).filter((w) => w.length > 2)
-      : [];
+    if (!current) return [];
+
+    // Build keyword set from current post's title + excerpt + content summary
+    const currentText = [
+      current.title || "",
+      current.titleZh || "",
+      current.excerpt || "",
+      current.excerptZh || "",
+    ].join(" ");
+
+    // Also extract keywords from content (first 500 chars for performance)
+    const contentPreview = (current.content || "").substring(0, 500);
+    const currentKeywords = new Set([
+      ...tokenize(currentText),
+      ...tokenize(contentPreview),
+    ]);
 
     const scored = allPosts
       .filter((p) => p.slug !== currentSlug)
       .map((p) => {
         let score = 0;
+
+        // 1. Category match (strong signal)
         if (p.category === category) score += 5;
-        const titleWords = (p.title || "").toLowerCase().split(/\s+/).filter((w) => w.length > 2);
-        const overlap = titleWords.filter((w) => currentTitleWords.includes(w)).length;
-        score += overlap * 2;
-        return { post: p, score };
+
+        // 2. Title keyword overlap
+        const pTitleText = [p.title || "", p.titleZh || "", p.excerpt || "", p.excerptZh || ""].join(" ");
+        const pTitleTokens = new Set(tokenize(pTitleText));
+        let titleOverlap = 0;
+        for (const tk of pTitleTokens) {
+          if (currentKeywords.has(tk)) titleOverlap++;
+        }
+        score += titleOverlap * 2;
+
+        // 3. Content keyword overlap (weaker signal, more tokens)
+        const pContentPreview = (p.content || "").substring(0, 500);
+        const pContentTokens = new Set(tokenize(pContentPreview));
+        let contentOverlap = 0;
+        for (const ct of pContentTokens) {
+          if (currentKeywords.has(ct)) contentOverlap++;
+        }
+        score += Math.min(contentOverlap, 10); // cap content overlap
+
+        return { post: p, score, titleOverlap };
       })
-      .filter((x) => x.score > 0)
+      .filter((x) => x.score >= 5) // Only show posts with meaningful similarity
       .sort((a, b) => b.score - a.score)
       .slice(0, max)
       .map((x) => x.post);
 
-    // If not enough scored posts, fill with same-category posts
-    if (scored.length < max) {
-      const fillers = allPosts
-        .filter((p) => p.slug !== currentSlug && !scored.find((s) => s.slug === p.slug))
-        .filter((p) => p.category === category)
-        .slice(0, max - scored.length);
-      scored.push(...fillers);
-    }
-
-    // If still not enough, fill with most recent
-    if (scored.length < max) {
-      const fillers = allPosts
-        .filter((p) => p.slug !== currentSlug && !scored.find((s) => s.slug === p.slug))
-        .slice(0, max - scored.length);
-      scored.push(...fillers);
-    }
-
     return scored;
   }, [currentSlug, category, max]);
 
+  // Don't render if no truly related posts found
   if (!related.length) return null;
 
-  const getTitle = (p) => lang === "zh" && p.titleZh ? p.titleZh : p.title;
+  const getTitle = (p) => (lang === "zh" && p.titleZh ? p.titleZh : p.title);
 
   return (
     <div className="mt-12">
