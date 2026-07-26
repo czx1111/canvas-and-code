@@ -196,10 +196,13 @@ export async function registerSiteVisit() {
   try {
     const visitorId = validateVisitorId(getOrCreateVisitorId());
     if (!visitorId) return;
-    await supabase.from("site_visits").upsert(
+    const { error } = await supabase.from("site_visits").upsert(
       { visitor_id: visitorId },
-      { onConflict: "visitor_id" }
+      { onConflict: "visitor_id", ignoreDuplicates: true }
     );
+    if (error) {
+      console.warn("[site-stats] Visit upsert error:", error.message);
+    }
   } catch (err) {
     console.warn("[site-stats] Failed to register visit:", err.message);
   }
