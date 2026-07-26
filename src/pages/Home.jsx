@@ -161,7 +161,7 @@ export default function Home() {
           <h2 className="font-display text-2xl text-ink mb-6">{t("home.recentTitle")}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {recent.map((post, i) => (
-              <PostCard key={post.slug} post={post} delay={i * 100} />
+              <PostCard key={post.slug} post={post} delay={i * 100} viewCount={postViewCounts[post.slug] || 0} />
             ))}
           </div>
         </section>

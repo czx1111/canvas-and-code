@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Clock, Tag } from "lucide-react";
+import { ArrowRight, Clock, Tag, Eye } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 import { formatDate } from "../lib/date.js";
 
-export default function PostCard({ post, delay = 0 }) {
+export default function PostCard({ post, delay = 0, viewCount = 0 }) {
   const { lang, t } = useI18n();
 
   const title = lang === "zh" && post.titleZh ? post.titleZh : post.title;
@@ -48,6 +48,11 @@ export default function PostCard({ post, delay = 0 }) {
             <span className="flex items-center gap-1">
               <Clock className="w-3 h-3" />
               {post.readTime}
+            </span>
+            <span className="w-1 h-1 rounded-full bg-hairline" />
+            <span className="flex items-center gap-1">
+              <Eye className="w-3 h-3" />
+              {viewCount} {lang === "zh" ? "阅读" : "views"}
             </span>
           </div>
           <h3 className="font-display text-ink group-hover:text-primary transition-colors mb-2 leading-snug line-clamp-2">

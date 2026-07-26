@@ -5,6 +5,7 @@ import { useI18n } from "../contexts/I18nContext.jsx";
 import { useBlogData } from "../contexts/BlogDataContext.jsx";
 import PostCard from "../components/PostCard.jsx";
 import SEO from "../components/SEO.jsx";
+import { useViewCounts } from "../hooks/useViewCount.js";
 
 export default function Blog() {
   const { t, lang } = useI18n();
@@ -43,6 +44,10 @@ export default function Blog() {
     if (cat === "All") return t("blog.all");
     return t(`common.categories.${cat}`);
   };
+
+  // Batch fetch view counts for all posts
+  const allSlugs = useMemo(() => posts.map((p) => p.slug), [posts]);
+  const { counts: viewCounts } = useViewCounts(allSlugs);
 
   return (
     <div>
@@ -93,7 +98,7 @@ export default function Blog() {
         {filtered.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map((post, i) => (
-              <PostCard key={post.slug} post={post} delay={i * 100} />
+              <PostCard key={post.slug} post={post} delay={i * 100} viewCount={viewCounts[post.slug] || 0} />
             ))}
           </div>
         ) : (

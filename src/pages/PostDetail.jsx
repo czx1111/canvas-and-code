@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Clock, Tag, Share2, Check, Twitter, Github, Linkedin } from "lucide-react";
+import { ArrowLeft, Clock, Tag, Share2, Check, Twitter, Github, Linkedin, Eye } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 import { useBlogData } from "../contexts/BlogDataContext.jsx";
 import { formatDate } from "../lib/date.js";
 import ArticleLayout from "../components/ArticleLayout.jsx";
 import SEO from "../components/SEO.jsx";
 import { useReadingHistory } from "../hooks/useReadingHistory.js";
+import { useViewCount } from "../hooks/useViewCount.js";
 
 export default function PostDetail() {
   const { slug } = useParams();
@@ -16,6 +17,7 @@ export default function PostDetail() {
   const { addEntry } = useReadingHistory();
 
   const post = posts.find((p) => p.slug === slug);
+  const { count: viewCount } = useViewCount(post ? slug : null);
 
   // Track reading history
   useEffect(() => {
@@ -75,6 +77,10 @@ export default function PostDetail() {
         <span className="flex items-center gap-1 text-xs text-muted">
           <Clock className="w-3 h-3" />
           {post.readTime}
+        </span>
+        <span className="flex items-center gap-1 text-xs text-muted">
+          <Eye className="w-3 h-3" />
+          {viewCount} {lang === "zh" ? "次阅读" : "views"}
         </span>
       </div>
       <h1 className="font-display text-4xl md:text-5xl text-ink leading-tight tracking-tight mb-4">
