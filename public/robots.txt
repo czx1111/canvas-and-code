@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://czx1111.github.io/canvas-and-code/sitemap.xml
