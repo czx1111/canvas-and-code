@@ -37,7 +37,7 @@ export default class ErrorBoundary extends Component {
             An unexpected error occurred. Try refreshing the page — if the
             problem persists, please come back later.
           </p>
-          {this.state.error && (
+          {this.state.error && import.meta.env.DEV && (
             <pre className="text-xs text-muted bg-surface-soft border border-hairline rounded-lg p-4 mb-6 overflow-x-auto text-left">
               {this.state.error.message}
             </pre>

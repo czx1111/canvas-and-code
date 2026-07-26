@@ -11,18 +11,29 @@ import Lightbox from "./Lightbox.jsx";
 
 /**
  * Sanitize schema — extends the GitHub-style default schema to allow `className`
- * on all elements (needed for custom styling and code highlighting classes).
+ * on specific elements (needed for code highlighting classes) and `loading` on images.
  *
  * Plugin order: rehype-raw → rehype-sanitize → rehype-highlight
  *   1. rehype-raw      parses raw HTML embedded in markdown
  *   2. rehype-sanitize strips dangerous tags/attributes (script, iframe, on*, javascript:)
  *   3. rehype-highlight adds highlight spans on the already-sanitized tree
+ *
+ * Security notes:
+ *   - `className` is only allowed on code/pre/span (for syntax highlighting), not on all elements
+ *   - `loading` is allowed on img for lazy loading
+ *   - No additional tag types are permitted beyond the GitHub default
+ *   - `style` attribute is NOT allowed (prevents CSS-based attacks)
  */
 const sanitizeSchema = {
   ...defaultSchema,
   attributes: {
     ...defaultSchema.attributes,
-    "*": [...defaultSchema.attributes["*"], "className"],
+    // Allow className only on code-related elements for syntax highlighting
+    code: [...(defaultSchema.attributes.code || []), "className"],
+    pre: [...(defaultSchema.attributes.pre || []), "className"],
+    span: [...(defaultSchema.attributes.span || []), "className"],
+    // Allow lazy loading on images
+    img: [...(defaultSchema.attributes.img || []), "loading"],
   },
 };
 

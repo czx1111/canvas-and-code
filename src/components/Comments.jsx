@@ -38,7 +38,10 @@ export default function Comments() {
             : mod;
         if (cancelled || !containerRef.current) return;
 
-        containerRef.current.innerHTML = "";
+        // Safely clear previous Twikoo instance without innerHTML
+        while (containerRef.current.firstChild) {
+          containerRef.current.removeChild(containerRef.current.firstChild);
+        }
 
         const result = twikoo.init({
           envId,
@@ -70,30 +73,39 @@ export default function Comments() {
 
   // ── 定制 Twikoo 表单：昵称栏改为 QQ 号 ──────────────────
   // 使用 MutationObserver 监听 DOM 变化，替代 setInterval 轮询
+  // 观察范围限定在评论区容器内，避免全局 DOM 监听的性能开销
   useEffect(() => {
+    if (!containerRef.current) return;
+
     const customize = () => {
-      // 在整个文档中查找 Twikoo 表单（不局限于 containerRef）
-      const metaInputs = document.querySelectorAll(".tk-meta-input");
+      const root = containerRef.current;
+      if (!root) return;
+      // 在评论区容器内查找 Twikoo 表单
+      const metaInputs = root.querySelectorAll(".tk-meta-input");
       metaInputs.forEach((metaInput) => {
         // 跳过已定制的表单
         if (metaInput.querySelector('input[name="nick"][data-qq-restrict]')) return;
 
-        // 1. 覆盖 clearNickIfFromQQInput
-        const twikooEl = metaInput.closest(".twikoo");
-        if (twikooEl && twikooEl.__vue__) {
-          const rootVue = twikooEl.__vue__;
-          const findComp = (vm) => {
-            if (vm.clearNickIfFromQQInput) return vm;
-            for (const child of vm.$children || []) {
-              const f = findComp(child);
-              if (f) return f;
+        // 1. 覆盖 clearNickIfFromQQInput（包裹在 try-catch 中防止 Twikoo 内部结构变化导致崩溃）
+        try {
+          const twikooEl = metaInput.closest(".twikoo");
+          if (twikooEl && twikooEl.__vue__) {
+            const rootVue = twikooEl.__vue__;
+            const findComp = (vm) => {
+              if (vm.clearNickIfFromQQInput) return vm;
+              for (const child of vm.$children || []) {
+                const f = findComp(child);
+                if (f) return f;
+              }
+              return null;
+            };
+            const comp = findComp(rootVue);
+            if (comp) {
+              comp.clearNickIfFromQQInput = function () {};
             }
-            return null;
-          };
-          const comp = findComp(rootVue);
-          if (comp) {
-            comp.clearNickIfFromQQInput = function () {};
           }
+        } catch {
+          // Twikoo 内部结构变化时静默失败
         }
 
         // 2. 定制昵称输入框
@@ -155,9 +167,9 @@ export default function Comments() {
       });
     };
 
-    // Use MutationObserver instead of setInterval polling
+    // MutationObserver 范围限定在评论区容器内
     const observer = new MutationObserver(() => customize());
-    observer.observe(document.body, { childList: true, subtree: true });
+    observer.observe(containerRef.current, { childList: true, subtree: true });
     // Run once immediately
     customize();
 
