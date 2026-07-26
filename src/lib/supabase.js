@@ -14,9 +14,87 @@ export const supabase = isSupabaseConfigured
   ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
   : null;
 
+// ── Input validation ─────────────────────────────────────────────────────
+// Slug format: alphanumeric, dashes, underscores, max 200 chars.
+// This matches the validation in the Supabase RPC function (see supabase/rls_policies.sql).
+const SLUG_REGEX = /^[a-zA-Z0-9_-]+$/;
+const MAX_SLUG_LENGTH = 200;
+const MAX_VISITOR_ID_LENGTH = 100;
+
+/**
+ * Validate a slug before sending it to Supabase.
+ * Returns the slug if valid, null if invalid.
+ *
+ * @param {string} slug
+ * @returns {string|null}
+ */
+function validateSlug(slug) {
+  if (!slug || typeof slug !== "string") return null;
+  if (slug.length > MAX_SLUG_LENGTH) return null;
+  if (!SLUG_REGEX.test(slug)) return null;
+  return slug;
+}
+
+/**
+ * Validate a visitor ID before sending it to Supabase.
+ * Allows alphanumeric, dashes — must be non-empty and reasonably short.
+ *
+ * @param {string} id
+ * @returns {string|null}
+ */
+function validateVisitorId(id) {
+  if (!id || typeof id !== "string") return null;
+  if (id.length === 0 || id.length > MAX_VISITOR_ID_LENGTH) return null;
+  // Allow alphanumeric + dashes (format: timestamp-randomstring)
+  if (!/^[a-zA-Z0-9-]+$/.test(id)) return null;
+  return id;
+}
+
+// ── Client-side rate limiting ─────────────────────────────────────────────
+// Prevents rapid-fire requests from inflating view counts.
+// Uses a sliding window in localStorage: max 1 increment per slug per 60s.
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_KEY = "supabase-rate-limit";
+
+/**
+ * Check if a slug can be incremented (rate limit not exceeded).
+ * Returns true if allowed, false if rate-limited.
+ *
+ * @param {string} slug
+ * @returns {boolean}
+ */
+function checkRateLimit(slug) {
+  try {
+    const now = Date.now();
+    const raw = localStorage.getItem(RATE_LIMIT_KEY);
+    const map = raw ? JSON.parse(raw) : {};
+
+    // Clean up expired entries
+    for (const key of Object.keys(map)) {
+      if (now - map[key] > RATE_LIMIT_WINDOW_MS) {
+        delete map[key];
+      }
+    }
+
+    if (map[slug] && now - map[slug] < RATE_LIMIT_WINDOW_MS) {
+      return false; // Rate limited
+    }
+
+    map[slug] = now;
+    localStorage.setItem(RATE_LIMIT_KEY, JSON.stringify(map));
+    return true;
+  } catch {
+    // If localStorage fails, allow the request (don't block functionality)
+    return true;
+  }
+}
+
 /**
  * Increment the view count for a given slug in the database.
  * Uses an upsert RPC function for atomic increment (avoids race conditions).
+ *
+ * Includes input validation and client-side rate limiting (1 req/slug/60s)
+ * to prevent view count manipulation.
  *
  * @param {string} slug
  * @returns {Promise<number>} the new count after incrementing
@@ -24,9 +102,21 @@ export const supabase = isSupabaseConfigured
 export async function incrementViewCount(slug) {
   if (!supabase) return 0;
 
+  // Validate slug format before sending to Supabase
+  const validSlug = validateSlug(slug);
+  if (!validSlug) {
+    console.warn("[view-count] Invalid slug rejected:", slug);
+    return 0;
+  }
+
+  // Client-side rate limit: 1 increment per slug per 60 seconds
+  if (!checkRateLimit(validSlug)) {
+    return 0;
+  }
+
   try {
     const { data, error } = await supabase.rpc("increment_view_count", {
-      note_slug: slug,
+      note_slug: validSlug,
     });
     if (error) {
       console.warn("[view-count] Supabase RPC error:", error.message);
@@ -41,6 +131,7 @@ export async function incrementViewCount(slug) {
 
 /**
  * Fetch view counts for all notes in a single query.
+ * Slugs are validated and filtered before querying.
  *
  * @param {string[]} slugs
  * @returns {Promise<Record<string, number>>} map of slug → count
@@ -48,11 +139,15 @@ export async function incrementViewCount(slug) {
 export async function fetchViewCounts(slugs) {
   if (!supabase || !slugs.length) return {};
 
+  // Validate and filter slugs before querying
+  const validSlugs = slugs.map(validateSlug).filter(Boolean);
+  if (!validSlugs.length) return {};
+
   try {
     const { data, error } = await supabase
       .from("view_counts")
       .select("slug, count")
-      .in("slug", slugs);
+      .in("slug", validSlugs);
 
     if (error) {
       console.warn("[view-count] Supabase query error:", error.message);
@@ -77,10 +172,12 @@ const VISITOR_KEY = "site-visitor-id";
 function getOrCreateVisitorId() {
   try {
     let id = localStorage.getItem(VISITOR_KEY);
-    if (!id) {
-      id = `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
-      localStorage.setItem(VISITOR_KEY, id);
+    if (id && validateVisitorId(id)) {
+      return id;
     }
+    // Generate a new safe visitor ID (timestamp + random alphanumeric)
+    id = `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+    localStorage.setItem(VISITOR_KEY, id);
     return id;
   } catch {
     return `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
@@ -97,7 +194,8 @@ export async function registerSiteVisit() {
   if (!supabase) return;
 
   try {
-    const visitorId = getOrCreateVisitorId();
+    const visitorId = validateVisitorId(getOrCreateVisitorId());
+    if (!visitorId) return;
     await supabase.from("site_visits").upsert(
       { visitor_id: visitorId },
       { onConflict: "visitor_id" }
