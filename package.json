@@ -16,18 +16,19 @@
     "react-dom": "^18.3.1",
     "react-helmet-async": "^3.0.0",
     "react-markdown": "^9.0.1",
-    "react-router-dom": "^6.26.0",
+    "react-router-dom": "^7.18.1",
     "rehype-highlight": "^7.0.2",
     "rehype-raw": "^7.0.0",
+    "rehype-sanitize": "^6.0.0",
     "remark-gfm": "^4.0.0",
     "twikoo": "^1.7.14"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.1",
+    "@vitejs/plugin-react": "^6.0.4",
     "autoprefixer": "^10.4.19",
     "gray-matter": "^4.0.3",
     "postcss": "^8.4.40",
     "tailwindcss": "^3.4.7",
-    "vite": "^5.3.5"
+    "vite": "^8.1.5"
   }
 }

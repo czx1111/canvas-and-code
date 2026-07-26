@@ -2,11 +2,29 @@ import { useState, useRef, useCallback, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
+import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import rehypeHighlight from "rehype-highlight";
 import { Link } from "react-router-dom";
 import { slugify, extractTextFromChildren } from "../lib/toc.js";
 import { Check, Copy, ChevronDown, Terminal } from "lucide-react";
 import Lightbox from "./Lightbox.jsx";
+
+/**
+ * Sanitize schema — extends the GitHub-style default schema to allow `className`
+ * on all elements (needed for custom styling and code highlighting classes).
+ *
+ * Plugin order: rehype-raw → rehype-sanitize → rehype-highlight
+ *   1. rehype-raw      parses raw HTML embedded in markdown
+ *   2. rehype-sanitize strips dangerous tags/attributes (script, iframe, on*, javascript:)
+ *   3. rehype-highlight adds highlight spans on the already-sanitized tree
+ */
+const sanitizeSchema = {
+  ...defaultSchema,
+  attributes: {
+    ...defaultSchema.attributes,
+    "*": [...defaultSchema.attributes["*"], "className"],
+  },
+};
 
 /** CodeBlock — wraps <pre> with copy button, language tag, line numbers, and collapse */
 function CodeBlock({ children, className }) {
@@ -117,7 +135,11 @@ export default function PostContent({ content }) {
     <div className="post-content">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeRaw, [rehypeHighlight, { detect: true, ignoreMissing: true }]]}
+        rehypePlugins={[
+          rehypeRaw,
+          [rehypeSanitize, sanitizeSchema],
+          [rehypeHighlight, { detect: true, ignoreMissing: true }],
+        ]}
         components={{
           h1: ({ children }) => (
             <h2 className="font-display text-2xl md:text-3xl font-semibold text-ink mt-xl mb-md leading-tight scroll-mt-20">

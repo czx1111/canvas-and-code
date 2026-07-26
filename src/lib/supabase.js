@@ -1,9 +1,10 @@
 import { createClient } from "@supabase/supabase-js";
 
 // These values are safe to expose in the frontend (protected by RLS policies).
-// Defaults are used when env vars are not set (e.g. local dev without .env).
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "https://bwsoxnloendutloszvam.supabase.co";
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || "sb_publishable_IU9xBssI6XGzLMzk9wn34g_tO_mlreU";
+// Read exclusively from env vars — do NOT hardcode credentials in source.
+// When unset, supabase will be null and the app falls back to localStorage.
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "";
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
 
 // If credentials are not configured, supabase will be null and the app
 // will gracefully fall back to localStorage-based view counting.
