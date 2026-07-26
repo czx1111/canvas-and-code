@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, BookOpen, CodeXml, Palette, Lightbulb, Pen, Tag, Clock, Shuffle, Hash, MessageCircle, Link2 } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
@@ -9,6 +10,7 @@ import PostCard from "../components/PostCard.jsx";
 import ReadingHistory from "../components/ReadingHistory.jsx";
 import PopularPosts from "../components/PopularPosts.jsx";
 import SEO from "../components/SEO.jsx";
+import { useViewCounts } from "../hooks/useViewCount.js";
 
 export default function Home() {
   const { t, lang } = useI18n();
@@ -25,6 +27,10 @@ export default function Home() {
 
   const featured = posts.find((p) => p.featured) || posts[0];
   const recent = posts.filter((p) => p !== featured).slice(0, 3);
+
+  // Batch fetch view counts for posts on home page
+  const postSlugs = useMemo(() => posts.map((p) => p.slug), [posts]);
+  const { counts: postViewCounts } = useViewCounts(postSlugs);
 
   const categories = [
     { icon: CodeXml, name: t("home.catEngineering"), desc: lang === "zh" ? "代码、架构与软件构建工艺" : "Code, architecture, and the craft of building software", color: "text-primary", bg: "bg-primary/10", cat: "Engineering" },
