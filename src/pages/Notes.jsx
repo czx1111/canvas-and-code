@@ -16,7 +16,7 @@ export default function Notes() {
   const [catsExpanded, setCatsExpanded] = useState(false);
 
   // Build category list: ["All", ...from data, ...custom if missing]
-  const customCats = ["Frontend", "Backend", "Algorithm", "Database", "Network", "Tools", "OS", "Other"];
+  const customCats = ["Frontend", "Backend", "Algorithm", "Database", "Network", "Tools", "OS", "COA", "Other"];
   const allCats = ["All", ...new Set([...noteCategories, ...customCats])];
 
   const filtered = useMemo(() => {
