@@ -116,7 +116,7 @@ export async function incrementViewCount(slug) {
 
   try {
     const { data, error } = await supabase.rpc("increment_view_count", {
-      note_slug: validSlug,
+      p_note_slug: validSlug,
     });
     if (error) {
       console.warn("[view-count] Supabase RPC error:", error.message);
