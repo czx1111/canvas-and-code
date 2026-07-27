@@ -8,7 +8,7 @@ import { useI18n } from "../contexts/I18nContext.jsx";
  *
  * @param {object} props
  * @param {Array} props.items — array of { slug, title, titleZh, date, category, type }
- * @param {string} [props.basePath="/post"] — base path for item links
+ * @param {string} [props.basePath="/post"] — unused; link path is derived from each item's `type` field ("/post" or "/note")
  */
 export default function Timeline({ items, basePath = "/post" }) {
   const { lang, t } = useI18n();
@@ -63,7 +63,7 @@ export default function Timeline({ items, basePath = "/post" }) {
               {yearItems.map((item) => (
                 <Link
                   key={`${item.type || "post"}-${item.slug}`}
-                  to={`${basePath}/${item.slug}`}
+                  to={`/${item.type || "post"}/${item.slug}`}
                   className="group flex items-start gap-3 py-2 px-3 -ml-3 rounded-lg hover:bg-surface-soft transition-colors"
                 >
                   <div className="flex items-center gap-2 text-xs text-muted flex-shrink-0 w-20 pt-0.5">

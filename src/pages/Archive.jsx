@@ -79,7 +79,7 @@ export default function Archive() {
 
         {/* Timeline */}
         {items.length > 0 ? (
-          <Timeline items={items} basePath="/post" />
+          <Timeline items={items} />
         ) : (
           <p className="text-muted text-center py-12">
             {lang === "zh" ? "暂无内容" : "No content yet"}
