@@ -13,7 +13,7 @@ export function rssFeedPlugin() {
   const SITE_TITLE = "Canvas & Code";
   const SITE_DESCRIPTION =
     "Thoughts on engineering, design, and the craft of building things with warmth and intention.";
-  const SITE_URL = "https://czx1111.github.io/canvas-and-code";
+  const SITE_URL = "https://xdcr.de5.net";
   const postsDataPath = path.resolve(process.cwd(), "src/generated/posts-data.js");
   const outputPath = path.resolve(process.cwd(), "public/feed.xml");
 

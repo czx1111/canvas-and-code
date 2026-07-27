@@ -6,7 +6,7 @@ import { sitemapPlugin } from './src/plugins/vite-plugin-sitemap.js'
 
 export default defineConfig({
   plugins: [react(), blogContentPlugin(), rssFeedPlugin(), sitemapPlugin()],
-  base: './',
+  base: '/',
   server: {
     port: 3000,
     open: true,

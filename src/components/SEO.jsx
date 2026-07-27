@@ -2,7 +2,7 @@ import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 
 const SITE_NAME = "Canvas & Code";
-const SITE_URL = "https://czx1111.github.io/canvas-and-code";
+const SITE_URL = "https://xdcr.de5.net";
 const DEFAULT_DESCRIPTION =
   "Canvas & Code — A blog about engineering, design, and the craft of building things with warmth and intention.";
 

@@ -8,7 +8,7 @@ import path from "path";
  * @param {object} options
  * @param {string} options.siteUrl — base URL of the site (e.g. "https://example.com")
  */
-export function sitemapPlugin({ siteUrl = "https://czx1111.github.io/canvas-and-code" } = {}) {
+export function sitemapPlugin({ siteUrl = "https://xdcr.de5.net" } = {}) {
   const root = process.cwd();
 
   function getDynamicRoutes() {
