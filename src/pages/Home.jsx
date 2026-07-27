@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, BookOpen, CodeXml, Palette, Lightbulb, Pen, Tag, Clock, Shuffle, Hash, MessageCircle, Link2 } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
@@ -27,6 +27,7 @@ export default function Home() {
 
   const featured = posts.find((p) => p.featured) || posts[0];
   const recent = posts.filter((p) => p !== featured).slice(0, 3);
+  const [coverError, setCoverError] = useState(false);
 
   // Batch fetch view counts for posts on home page
   const postSlugs = useMemo(() => posts.map((p) => p.slug), [posts]);
@@ -116,11 +117,12 @@ export default function Home() {
             className="group block rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/8 hover:-translate-y-0.5 bg-surface-soft border border-hairline"
           >
             <div className="relative overflow-hidden h-64">
-              {featured.coverImage ? (
+              {featured.coverImage && !coverError ? (
                 <img
                   src={featured.coverImage}
                   alt={ft.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  onError={() => setCoverError(true)}
                 />
               ) : (
                 <div className="w-full h-full bg-gradient-to-br from-primary/20 via-accent-teal/10 to-accent-amber/15 flex items-center justify-center transition-transform duration-500 group-hover:scale-105">

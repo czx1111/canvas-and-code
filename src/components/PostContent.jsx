@@ -118,6 +118,7 @@ function CodeBlock({ children, className }) {
 /** ImageWithLightbox — wraps img with click-to-zoom lightbox */
 function ImageWithLightbox({ src, alt }) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   return (
     <>
@@ -126,9 +127,16 @@ function ImageWithLightbox({ src, alt }) {
         alt={alt || ""}
         className="w-full rounded-lg my-lg border border-hairline cursor-zoom-in hover:opacity-90 transition-opacity"
         loading="lazy"
-        onClick={() => setLightboxOpen(true)}
+        onError={() => setImgError(true)}
+        style={imgError ? { display: "none" } : undefined}
+        onClick={() => !imgError && setLightboxOpen(true)}
       />
-      {lightboxOpen && (
+      {imgError && (
+        <div className="w-full rounded-lg my-lg border border-hairline bg-surface-soft p-8 text-center text-sm text-muted">
+          {alt || "Image failed to load"}
+        </div>
+      )}
+      {lightboxOpen && !imgError && (
         <Lightbox
           images={[{ src, alt: alt || "" }]}
           initialIndex={0}

@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet-async";
+import { useLocation } from "react-router-dom";
 
 const SITE_NAME = "Canvas & Code";
 const SITE_URL = "https://czx1111.github.io/canvas-and-code";
@@ -14,7 +15,10 @@ const DEFAULT_DESCRIPTION =
  * @param {string} [ogImage] — Open Graph image URL
  */
 export default function SEO({ title, description = DEFAULT_DESCRIPTION, ogType = "website", ogImage }) {
+  const location = useLocation();
   const fullTitle = title ? `${title} — ${SITE_NAME}` : SITE_NAME;
+  // HashRouter: full URL includes the hash (e.g. .../#/post/my-slug)
+  const currentUrl = `${SITE_URL}#${location.pathname}`;
 
   return (
     <Helmet>
@@ -24,7 +28,7 @@ export default function SEO({ title, description = DEFAULT_DESCRIPTION, ogType =
       <meta property="og:title" content={title || SITE_NAME} />
       <meta property="og:description" content={description} />
       <meta property="og:type" content={ogType} />
-      <meta property="og:url" content={SITE_URL} />
+      <meta property="og:url" content={currentUrl} />
       {ogImage && <meta property="og:image" content={ogImage} />}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title || SITE_NAME} />

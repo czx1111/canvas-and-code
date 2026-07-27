@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { translations } from "../i18n.js";
 
-const I18nContext = createContext();
+export const I18nContext = createContext();
 
 export function I18nProvider({ children }) {
   const [lang, setLang] = useState(() => {

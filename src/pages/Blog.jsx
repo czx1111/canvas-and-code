@@ -9,7 +9,7 @@ import { useViewCounts } from "../hooks/useViewCount.js";
 
 export default function Blog() {
   const { t, lang } = useI18n();
-  const { posts } = useBlogData();
+  const { posts, postCategories } = useBlogData();
   const location = useLocation();
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
@@ -20,7 +20,8 @@ export default function Blog() {
     }
   }, [location.state]);
 
-  const categories = ["All", "Engineering", "Design", "Thoughts"];
+  // Build category list dynamically from data
+  const categories = useMemo(() => ["All", ...postCategories], [postCategories]);
 
   const filtered = useMemo(() => {
     let result = posts;

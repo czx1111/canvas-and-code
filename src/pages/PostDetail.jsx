@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Clock, Tag, Share2, Check, Twitter, Github, Linkedin, Eye } from "lucide-react";
+import { ArrowLeft, Clock, Tag, Share2, Check, Twitter, Github, Linkedin, Eye, ImageIcon } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 import { useBlogData } from "../contexts/BlogDataContext.jsx";
 import { formatDate } from "../lib/date.js";
@@ -18,6 +18,10 @@ export default function PostDetail() {
 
   const post = posts.find((p) => p.slug === slug);
   const { count: viewCount } = useViewCount(post ? slug : null);
+  const [coverError, setCoverError] = useState(false);
+
+  // Reset cover error state when navigating to a different post
+  useEffect(() => { setCoverError(false); }, [slug]);
 
   // Track reading history
   useEffect(() => {
@@ -100,13 +104,19 @@ export default function PostDetail() {
     </header>
   );
 
-  const coverImage = post.coverImage ? (
+  const coverImage = post.coverImage && !coverError ? (
     <div className="rounded-xl overflow-hidden mb-10 border border-hairline">
       <img
         src={post.coverImage}
         alt={title}
         className="w-full h-64 md:h-80 object-cover"
+        onError={() => setCoverError(true)}
       />
+    </div>
+  ) : coverError ? (
+    <div className="rounded-xl overflow-hidden mb-10 border border-hairline h-64 md:h-80 bg-surface-soft flex flex-col items-center justify-center gap-2 text-muted">
+      <ImageIcon className="w-8 h-8" />
+      <span className="text-sm">{lang === "zh" ? "封面图加载失败" : "Cover image failed to load"}</span>
     </div>
   ) : null;
 
