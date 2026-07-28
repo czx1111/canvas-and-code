@@ -17,13 +17,18 @@ const DEFAULT_DESCRIPTION =
 export default function SEO({ title, description = DEFAULT_DESCRIPTION, ogType = "website", ogImage }) {
   const location = useLocation();
   const fullTitle = title ? `${title} — ${SITE_NAME}` : SITE_NAME;
-  // HashRouter: full URL includes the hash (e.g. .../#/post/my-slug)
-  const currentUrl = `${SITE_URL}#${location.pathname}`;
+  // BrowserRouter: clean URLs that crawlers and social scrapers can use.
+  // Trailing slash matches the URL GitHub Pages finally serves (it 301s
+  // bare directory paths to the slash-suffixed version), and matches the
+  // canonical URLs emitted by vite-plugin-prerender at build time.
+  const path = location.pathname === "/" ? "/" : location.pathname.replace(/\/?$/, "/");
+  const currentUrl = `${SITE_URL}${path}`;
 
   return (
     <Helmet>
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
+      <link rel="canonical" href={currentUrl} />
       <meta property="og:site_name" content={SITE_NAME} />
       <meta property="og:title" content={title || SITE_NAME} />
       <meta property="og:description" content={description} />

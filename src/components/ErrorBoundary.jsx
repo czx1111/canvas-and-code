@@ -59,7 +59,7 @@ export default class ErrorBoundary extends Component {
               {lang === "zh" ? "重试" : "Try again"}
             </button>
             <a
-              href="#/"
+              href="/"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-hairline text-ink font-medium text-sm hover:bg-surface-soft transition-colors"
             >
               {lang === "zh" ? "回到首页" : "Back home"}

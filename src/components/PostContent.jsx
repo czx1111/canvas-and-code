@@ -147,11 +147,84 @@ function ImageWithLightbox({ src, alt }) {
   );
 }
 
-export default function PostContent({ content }) {
+/**
+ * Sidenote — Tufte-style margin note.
+ * Written in markdown as an inline note: ^[note text]
+ * Wide screens (≥1500px): floats into the left margin.
+ * Narrow screens: degrades to inline muted parenthesized text.
+ */
+function Sidenote({ n, text }) {
+  return (
+    <span className="sidenote-wrapper">
+      <sup className="sidenote-ref">{n}</sup>
+      <span className="sidenote" role="note">
+        <span className="sidenote-num">{n}</span>
+        {text}
+      </span>
+    </span>
+  );
+}
+
+/**
+ * transformSidenotes — walks paragraph children, splits plain-text nodes on
+ * the inline-note syntax ^[...], and returns a new children array with
+ * <Sidenote> elements injected. Element children (links, code, etc.) are
+ * left untouched so their markup is never broken.
+ *
+ * @param {React.ReactNode} children
+ * @param {() => number} nextNum — returns the next sidenote number
+ */
+function transformSidenotes(children, nextNum) {
+  const splitText = (text) => {
+    const parts = [];
+    const re = /\^\[([^\]]+)\]/g;
+    let last = 0;
+    let m;
+    while ((m = re.exec(text)) !== null) {
+      if (m.index > last) parts.push(text.slice(last, m.index));
+      parts.push({ __note: m[1] });
+      last = m.index + m[0].length;
+    }
+    if (last < text.length) parts.push(text.slice(last));
+    return parts;
+  };
+
+  const walk = (child) => {
+    if (typeof child === "string") return splitText(child);
+    if (Array.isArray(child)) return child.flatMap(walk);
+    return [child];
+  };
+
+  return walk(children)
+    .flat()
+    .map((part, i) =>
+      part && typeof part === "object" && part.__note
+        ? <Sidenote key={`sn-${i}`} n={nextNum()} text={part.__note} />
+        : part
+    );
+}
+
+/** PullQuote — editorial pull quote. Written in markdown as: > [!pull] quote text */
+function PullQuote({ text }) {
+  return (
+    <div className="pull-quote">
+      <p>
+        <span className="pull-quote-mark" aria-hidden="true">&ldquo;</span>
+        {text}
+      </p>
+    </div>
+  );
+}
+
+export default function PostContent({ content, dropCap = false }) {
   if (!content) return null;
 
+  // Sidenote numbering resets per article render (render order is deterministic)
+  let sidenoteCounter = 0;
+  const nextSidenoteNum = () => ++sidenoteCounter;
+
   return (
-    <div className="post-content">
+    <div className={`post-content${dropCap ? " drop-cap" : ""}`}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[
@@ -188,13 +261,21 @@ export default function PostContent({ content }) {
           ),
           p: ({ children }) => (
             <p className="text-body leading-[1.8] mb-md text-[15px]">
-              {children}
+              {transformSidenotes(children, nextSidenoteNum)}
             </p>
           ),
           a: ({ href, children }) => {
-            const isInternal = href && href.startsWith("#/");
-            if (isInternal) {
+            // Internal links: "/post/x" (BrowserRouter) and legacy "#/post/x"
+            // (written when the site used HashRouter) both become router Links.
+            if (href && href.startsWith("#/")) {
               return <Link to={href.slice(1)} className="text-primary underline hover:text-primary-active">{children}</Link>;
+            }
+            if (href && href.startsWith("/")) {
+              return <Link to={href} className="text-primary underline hover:text-primary-active">{children}</Link>;
+            }
+            // Same-page anchor links (e.g. "#some-heading") stay in-page.
+            if (href && href.startsWith("#")) {
+              return <a href={href} className="text-primary underline hover:text-primary-active">{children}</a>;
             }
             return (
               <a href={href} target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary-active">
@@ -213,11 +294,20 @@ export default function PostContent({ content }) {
             </ol>
           ),
           li: ({ children }) => <li className="pl-xs">{children}</li>,
-          blockquote: ({ children }) => (
-            <blockquote className="border-l-4 border-primary/30 bg-surface-soft py-sm pl-lg pr-md my-lg rounded-r-md">
-              {children}
-            </blockquote>
-          ),
+          blockquote: ({ children }) => {
+            // Pull-quote convention: "> [!pull] quote text" renders as an
+            // editorial pull quote instead of a regular blockquote.
+            const text = extractTextFromChildren(children).trim();
+            const pullMatch = text.match(/^\[!pull\]\s*/i);
+            if (pullMatch) {
+              return <PullQuote text={text.slice(pullMatch[0].length).trim()} />;
+            }
+            return (
+              <blockquote className="border-l-4 border-primary/30 bg-surface-soft py-sm pl-lg pr-md my-lg rounded-r-md">
+                {children}
+              </blockquote>
+            );
+          },
           code: ({ inline, className, children }) => {
             if (inline) {
               return (

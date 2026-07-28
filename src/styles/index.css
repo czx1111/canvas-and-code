@@ -451,3 +451,81 @@
 .group:hover .code-collapse-hint {
   opacity: 1;
 }
+
+/* ── Editorial Typography: drop cap, sidenotes, pull quotes ── */
+
+/* Drop cap — applied to the first paragraph of posts (class set by PostContent).
+   Pure CSS: every new article gets it automatically, no authoring needed. */
+.post-content.drop-cap > p:first-of-type::first-letter {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 3.25em;
+  font-weight: 600;
+  float: left;
+  line-height: 0.82;
+  padding: 0.08em 0.14em 0 0;
+  color: var(--color-primary);
+}
+
+/* Sidenote reference number in the text flow */
+.sidenote-ref {
+  color: var(--color-primary);
+  font-size: 0.72em;
+  font-weight: 600;
+  margin: 0 1px;
+}
+
+/* Sidenote — default (narrow screens): inline muted parenthesized note */
+.sidenote {
+  font-size: 0.8em;
+  line-height: 1.5;
+  color: var(--color-muted);
+}
+.sidenote::before { content: "（"; color: var(--color-muted-soft); }
+.sidenote::after { content: "）"; color: var(--color-muted-soft); }
+.sidenote-num {
+  color: var(--color-primary);
+  font-weight: 600;
+  margin-right: 2px;
+}
+
+/* Sidenote — wide screens: floats into the left margin (Tufte style).
+   Breakpoint chosen so the note never collides with the TOC sidebar. */
+@media (min-width: 1500px) {
+  .sidenote {
+    float: left;
+    clear: left;
+    width: 180px;
+    margin-left: -205px;
+    margin-bottom: 12px;
+    padding-top: 5px;
+    border-top: 1.5px solid var(--color-primary);
+    font-size: 12px;
+    line-height: 1.55;
+  }
+  .sidenote::before,
+  .sidenote::after { content: none; }
+}
+
+/* Pull quote — markdown: > [!pull] quote text */
+.pull-quote {
+  border-top: 0.5px solid var(--color-hairline);
+  border-bottom: 0.5px solid var(--color-hairline);
+  padding: 1.5rem 2rem;
+  margin: 2rem 0;
+  text-align: center;
+}
+.pull-quote p {
+  font-family: "Playfair Display", Georgia, serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height: 1.65;
+  color: var(--color-ink);
+  margin: 0;
+}
+.pull-quote-mark {
+  font-size: 1.9rem;
+  line-height: 0;
+  vertical-align: -0.32em;
+  margin-right: 0.3rem;
+  color: var(--color-primary);
+}

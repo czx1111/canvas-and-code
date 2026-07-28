@@ -9,6 +9,7 @@ import { notes as allNotes } from "../generated/notes-data.js";
 import PostCard from "../components/PostCard.jsx";
 import ReadingHistory from "../components/ReadingHistory.jsx";
 import PopularPosts from "../components/PopularPosts.jsx";
+import ContinueReading from "../components/ContinueReading.jsx";
 import SEO from "../components/SEO.jsx";
 import { useViewCounts } from "../hooks/useViewCount.js";
 
@@ -101,6 +102,9 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* Continue Reading — renders only when an article is left unfinished */}
+      <ContinueReading />
 
       {/* Featured */}
       {featured && ft && (

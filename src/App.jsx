@@ -22,6 +22,7 @@ const About = lazy(() => import("./pages/About.jsx"));
 const Archive = lazy(() => import("./pages/Archive.jsx"));
 const Projects = lazy(() => import("./pages/Projects.jsx"));
 const Changelog = lazy(() => import("./pages/Changelog.jsx"));
+const Series = lazy(() => import("./pages/Series.jsx"));
 const NotFound = lazy(() => import("./pages/NotFound.jsx"));
 
 function PageLoader() {
@@ -61,6 +62,7 @@ export default function App() {
               <Route path="/notes" element={<Notes />} />
               <Route path="/note/:slug" element={<NoteDetail />} />
               <Route path="/tags" element={<Tags />} />
+              <Route path="/series" element={<Series />} />
               <Route path="/links" element={<FriendLinks />} />
               <Route path="/guestbook" element={<Guestbook />} />
               <Route path="/about" element={<About />} />

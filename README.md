@@ -22,8 +22,9 @@ Five-layer "Content as Code" architecture:
 1. **Content** — Markdown files in `content/posts/`
 2. **Build** — Vite plugin generates `posts-data.js`
 3. **Data** — React Context provides posts to the app
-4. **View** — React SPA with HashRouter
-5. **Deploy** — GitHub Actions → GitHub Pages
+4. **View** — React SPA with BrowserRouter
+5. **Prerender** — build-time plugin writes per-route HTML (og/canonical/JSON-LD) so crawlers see real meta
+6. **Deploy** — GitHub Actions → GitHub Pages
 
 ## Add a New Post
 
@@ -35,7 +36,7 @@ Five-layer "Content as Code" architecture:
 
 - React 18 + Vite
 - Tailwind CSS (Warm Canvas Editorial design system)
-- React Router (HashRouter)
+- React Router (BrowserRouter + build-time prerendered meta)
 - react-markdown + remark-gfm + rehype-raw
 - gray-matter (frontmatter parsing)
 - Lucide React (icons)

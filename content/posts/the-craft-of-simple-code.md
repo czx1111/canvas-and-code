@@ -9,6 +9,11 @@ date: 2026-07-23
 readTime: 5 min
 coverImage: ""
 featured: false
+series: craft-of-code
+seriesOrder: 1
+seriesTitle: "The Craft of Code"
+seriesDescription: "Three essays on writing code that stays readable: simplicity first, architecture that earns its keep, and React patterns that survive production."
+seriesStatus: ongoing
 ---
 
 ## The Seduction of Cleverness
@@ -61,7 +66,7 @@ The point is not that code should be simplistic. Real problems have real complex
 
 A blog does not need a plugin system. A todo app does not need a microservices architecture. A landing page does not need a state management library.
 
-> Perfection is achieved not when there is nothing more to add, but when there is nothing left to take away.
+> [!pull] Perfection is achieved not when there is nothing more to add, but when there is nothing left to take away.
 
 ## Conclusion
 

@@ -13,7 +13,7 @@ featured: false
 
 ## Why Typography Matters
 
-Typography is 95% of web design. Before anyone notices your color palette, your spacing, or your animations, they *read* your content. If reading is hard, nothing else matters.
+Typography is 95% of web design. Before anyone notices your color palette, your spacing, or your animations, they *read* your content. If reading is hard, nothing else matters.^[This claim comes from Oliver Reichenstein's 2006 essay "Web Design is 95% Typography" — still quoted, still true.]
 
 ## Font Loading
 
@@ -45,7 +45,7 @@ A good font pairing creates *contrast without conflict*. Here is the pairing use
 | Body | Inter | Sans-serif, readable, modern |
 | Code | JetBrains Mono | Monospace, ligatures, clear |
 
-The rule: **one serif + one sans-serif**. Two serifs fight. Two sans-serifs are boring. The pairing is where the magic happens.
+The rule: **one serif + one sans-serif**. Two serifs fight. Two sans-serifs are boring. The pairing is where the magic happens.^[Robert Bringhurst's *The Elements of Typographic Style* is the canonical reference here — chapter on "Combining Typefaces" is worth the whole book.]
 
 ## Vertical Rhythm
 

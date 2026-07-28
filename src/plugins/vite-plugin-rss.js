@@ -75,8 +75,8 @@ export function rssFeedPlugin() {
 
       items += `    <item>
       <title>${escapeXml(post.title)}</title>
-      <link>${SITE_URL}/#/post/${escapeXml(post.slug)}</link>
-      <guid isPermaLink="true">${SITE_URL}/#/post/${escapeXml(post.slug)}</guid>
+      <link>${SITE_URL}/post/${escapeXml(post.slug)}/</link>
+      <guid isPermaLink="true">${SITE_URL}/post/${escapeXml(post.slug)}/</guid>
       <pubDate>${pubDate}</pubDate>
       <description>${description}</description>
       <content:encoded><![CDATA[${stripMarkdown(post.content || "").substring(0, 1000)}...]]></content:encoded>

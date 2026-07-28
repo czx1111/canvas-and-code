@@ -9,6 +9,8 @@ date: 2026-07-23
 readTime: 7 min
 coverImage: ""
 featured: false
+series: craft-of-code
+seriesOrder: 3
 ---
 
 ## Beyond the Basics

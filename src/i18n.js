@@ -13,6 +13,7 @@ export const translations = {
       archive: "Archive",
       projects: "Projects",
       changelog: "Changelog",
+      series: "Series",
     },
     // Home
     home: {
@@ -129,6 +130,7 @@ export const translations = {
       archive: "归档",
       projects: "项目",
       changelog: "更新日志",
+      series: "专栏",
     },
     // Home
     home: {

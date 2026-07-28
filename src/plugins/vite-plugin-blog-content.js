@@ -69,6 +69,11 @@ export function blogContentPlugin() {
         featured: fm.featured || false,
         series: fm.series || "",
         seriesOrder: fm.seriesOrder || 0,
+        // Optional series metadata — set on any post of the series (first
+        // non-empty value wins). Keeps the /series page fully markdown-driven.
+        seriesTitle: fm.seriesTitle || "",
+        seriesDescription: fm.seriesDescription || "",
+        seriesStatus: fm.seriesStatus || "",
         content,
         contentZh,
       };

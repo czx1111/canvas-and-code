@@ -9,6 +9,8 @@ date: 2026-07-23
 readTime: 8 min
 coverImage: ""
 featured: false
+series: craft-of-code
+seriesOrder: 2
 ---
 
 ## The Problem with Blog Backends

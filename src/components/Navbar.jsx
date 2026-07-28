@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Globe, House, BookOpen, User, NotebookPen, Sun, Moon, Search, Archive, Hash, FolderGit2, GitCommit, ChevronDown } from "lucide-react";
+import { Menu, X, Globe, House, BookOpen, User, NotebookPen, Sun, Moon, Search, Archive, Hash, FolderGit2, GitCommit, ChevronDown, Layers } from "lucide-react";
 import { useI18n } from "../contexts/I18nContext.jsx";
 import { useTheme } from "../contexts/ThemeContext.jsx";
 
@@ -22,6 +22,7 @@ export default function Navbar({ onSearchOpen }) {
 
   // Secondary links — collapsed into "More" dropdown on desktop
   const secondaryLinks = [
+    { to: "/series", label: t("nav.series"), icon: Layers },
     { to: "/tags", label: t("nav.tags"), icon: Hash },
     { to: "/archive", label: t("nav.archive"), icon: Archive },
     { to: "/projects", label: t("nav.projects"), icon: FolderGit2 },

@@ -7,6 +7,7 @@ import PostNav from "./PostNav.jsx";
 import Comments from "./Comments.jsx";
 import RelatedPosts from "./RelatedPosts.jsx";
 import PostSeries from "./PostSeries.jsx";
+import ResumeReading from "./ResumeReading.jsx";
 
 /**
  * ArticleLayout — shared layout for PostDetail and NoteDetail.
@@ -49,6 +50,9 @@ export default function ArticleLayout({
     <div className="max-w-5xl mx-auto px-6 py-12">
       {children}
       <ReadingProgress />
+      {currentSlug && (
+        <ResumeReading type={basePath === "/post" ? "post" : "note"} slug={currentSlug} />
+      )}
       <div className="flex gap-10">
         <article className="flex-1 min-w-0 max-w-3xl mx-auto xl:mx-0">
           {/* Back link */}
@@ -71,9 +75,9 @@ export default function ArticleLayout({
             <PostSeries seriesId={seriesId} currentSlug={currentSlug} />
           )}
 
-          {/* Content */}
+          {/* Content — posts get the editorial drop cap, notes stay plain */}
           <TableOfContents content={content} variant="mobile" />
-          <PostContent content={content} />
+          <PostContent content={content} dropCap={basePath === "/post"} />
 
           {/* Footer */}
           {footer && <footer className="mt-12 pt-8 border-t border-hairline">{footer}</footer>}

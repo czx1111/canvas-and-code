@@ -46,7 +46,9 @@ export function sitemapPlugin({ siteUrl = "https://xdcr.de5.net" } = {}) {
   }
 
   function generateSitemap() {
-    const staticRoutes = ["/", "/blog", "/notes", "/about", "/archive"];
+    // Keep in sync with the routes in App.jsx.
+    // Trailing slashes match the URLs GitHub Pages finally serves.
+    const staticRoutes = ["/", "/blog/", "/notes/", "/tags/", "/series/", "/links/", "/guestbook/", "/about/", "/archive/", "/projects/", "/changelog/"];
     const dynamicRoutes = getDynamicRoutes();
 
     const base = siteUrl.replace(/\/$/, "");
@@ -56,13 +58,12 @@ export function sitemapPlugin({ siteUrl = "https://xdcr.de5.net" } = {}) {
     xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
 
     for (const r of staticRoutes) {
-      const path = r === "/" ? "/#/" : `/#${r}`;
-      xml += `  <url>\n    <loc>${base}${path}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+      xml += `  <url>\n    <loc>${base}${r}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
     }
 
     for (const r of dynamicRoutes) {
       const lastmod = r.date || now;
-      xml += `  <url>\n    <loc>${base}/#${r.path}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.6</priority>\n  </url>\n`;
+      xml += `  <url>\n    <loc>${base}${r.path}/</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.6</priority>\n  </url>\n`;
     }
 
     xml += `</urlset>\n`;
