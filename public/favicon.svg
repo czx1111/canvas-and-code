@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-  <rect width="32" height="32" rx="8" fill="#cc785c"/>
-  <text x="16" y="22" text-anchor="middle" font-family="Playfair Display, serif" font-size="18" font-weight="700" fill="#faf9f5">&amp;</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Canvas &amp; Code</title>
+  <rect width="64" height="64" rx="14" fill="#cc785c"/>
+  <path d="M 42.3 21.7 A 15 15 0 1 0 42.3 42.3" fill="none" stroke="#faf9f5" stroke-width="7" stroke-linecap="round"/>
+  <rect x="44" y="40" width="12" height="4.8" rx="2.4" fill="#e8a55a"/>
 </svg>
