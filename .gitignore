@@ -12,4 +12,13 @@ OPERATION_MANUAL.md
 public/feed.xml
 public/sitemap.xml
 public/robots.txt
+public/covers/
 .workbuddy
+
+# Temp build/test artifacts
+.build-*
+.build-check.txt
+.build-exit.txt
+.build-log.txt
+.smoke*
+.verify.cjs
