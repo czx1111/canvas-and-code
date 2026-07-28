@@ -17,7 +17,6 @@ import matter from "gray-matter";
 export function blogContentPlugin() {
   const postsDir = path.resolve(process.cwd(), "content/posts");
   const notesDir = path.resolve(process.cwd(), "content/notes");
-  const coversDir = path.resolve(process.cwd(), "public/covers");
   const postsOutput = path.resolve(process.cwd(), "src/generated/posts-data.js");
   const notesOutput = path.resolve(process.cwd(), "src/generated/notes-data.js");
   const statsOutput = path.resolve(process.cwd(), "src/generated/site-stats.js");
@@ -72,7 +71,11 @@ export function blogContentPlugin() {
         category: fm.category || "Thoughts",
         date: fm.date || "",
         readTime: autoReadTime,
-        coverImage: resolveCoverImage(fm, slug),
+        coverImage:
+          fm.coverImage ||
+          `https://picsum.photos/seed/${encodeURIComponent(
+            fm.slug || fm.category || "blog"
+          )}/800/400`,
         featured: fm.featured || false,
         series: fm.series || "",
         seriesOrder: fm.seriesOrder || 0,
@@ -183,78 +186,6 @@ export const noteCategories = ${JSON.stringify(noteCategories)};
     fs.writeFileSync(notesOutput, output, "utf-8");
     console.log(`[blog-content] Generated ${notes.length} notes → ${path.relative(process.cwd(), notesOutput)}`);
     return notes;
-  }
-
-  // ── Cover images ───────────────────────────────────────
-  // Posts without frontmatter coverImage get a deterministic local SVG
-  // cover (public/covers/<slug>.svg) instead of an external placeholder
-  // service. Colors and geometry derive from a stable slug hash, so every
-  // build produces byte-identical files.
-
-  const COVER_ACCENTS = ["#cc785c", "#5db8a6", "#e8a55a"];
-
-  function escapeXml(str) {
-    return String(str)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-  }
-
-  /** djb2 string hash — stable across runs, keeps covers deterministic. */
-  function hashString(str) {
-    let hash = 5381;
-    for (let i = 0; i < str.length; i++) {
-      hash = ((hash << 5) + hash + str.charCodeAt(i)) >>> 0;
-    }
-    return hash;
-  }
-
-  /**
-   * Render a restrained 800x400 SVG cover: paper background, the title's
-   * initial letter in large serif, and two muted geometric accents.
-   */
-  function renderCoverSvg(slug, title) {
-    const hash = hashString(slug);
-    const primary = COVER_ACCENTS[hash % COVER_ACCENTS.length];
-    // Offset by 1-2 positions so the secondary accent always differs
-    // (unsigned shift — a signed >> on hash >= 2^31 could yield offset 0).
-    const secondary = COVER_ACCENTS[(hash + 1 + ((hash >>> 4) % 2)) % COVER_ACCENTS.length];
-    const letter = escapeXml((title || slug).trim().charAt(0).toUpperCase() || "C");
-    // Unsigned shifts: hash can exceed 2^31, and signed >> would make the
-    // modulo negative and shrink the geometry ranges.
-    const cx = 600 + ((hash >>> 3) % 80);
-    const cy = 80 + ((hash >>> 6) % 60);
-    const radius = 64 + ((hash >>> 9) % 40);
-    const rectX = 520 + ((hash >>> 12) % 60);
-    const rectY = 210 + ((hash >>> 15) % 40);
-    const rotation = 8 + ((hash >>> 18) % 24);
-
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400">
-  <rect width="800" height="400" fill="#faf9f5"/>
-  <circle cx="${cx}" cy="${cy}" r="${radius}" fill="#f5f0e8"/>
-  <rect x="${rectX}" y="${rectY}" width="110" height="110" rx="6" fill="${secondary}" opacity="0.16" transform="rotate(${rotation} ${rectX + 55} ${rectY + 55})"/>
-  <circle cx="${cx}" cy="${cy}" r="${Math.round(radius / 2)}" fill="${secondary}" opacity="0.22"/>
-  <text x="72" y="292" font-family="Georgia, 'Times New Roman', serif" font-size="216" fill="${primary}">${letter}</text>
-  <rect x="76" y="326" width="104" height="6" rx="3" fill="${primary}" opacity="0.55"/>
-</svg>
-`;
-  }
-
-  /**
-   * Resolve a post's cover image: frontmatter coverImage wins; otherwise
-   * generate (or reuse) a deterministic local SVG and return its public URL.
-   */
-  function resolveCoverImage(fm, slug) {
-    if (fm.coverImage) return fm.coverImage;
-    const svg = renderCoverSvg(slug, fm.title || slug);
-    ensureDir(coversDir);
-    const filePath = path.join(coversDir, `${slug}.svg`);
-    // Write only when missing or stale so dev-mode rebuilds stay cheap.
-    if (!fs.existsSync(filePath) || fs.readFileSync(filePath, "utf-8") !== svg) {
-      fs.writeFileSync(filePath, svg, "utf-8");
-    }
-    return `/covers/${slug}.svg`;
   }
 
   // ── Word counts & read time ────────────────────────────
