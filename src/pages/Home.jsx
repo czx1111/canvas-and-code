@@ -49,24 +49,15 @@ export default function Home() {
       <SEO />
       {/* Hero */}
       <section className="relative overflow-hidden">
-        {/* Grid paper background — 稿纸渐显 */}
-        <div
-          className="absolute inset-0 animate-fade-in opacity-0"
-          style={{
-            backgroundImage: 'linear-gradient(var(--color-hairline) 1px, transparent 1px), linear-gradient(90deg, var(--color-hairline) 1px, transparent 1px)',
-            backgroundSize: '40px 40px',
-            maskImage: 'linear-gradient(to right, transparent 0%, black 60%)',
-            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 60%)',
-          }}
-        />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent-teal/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3" />
-        <div className="max-w-5xl mx-auto px-6 py-20 md:py-section relative">
+        <div className="max-w-5xl mx-auto px-6 py-20 md:py-28 relative">
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-medium mb-6">
               <Pen className="w-3 h-3" />
               {lang === "zh" ? "个人博客" : "Personal Blog"}
             </div>
-            <h1 className="font-display text-display md:text-display-lg text-ink tracking-tight mb-6">
+            <h1 className="font-display text-5xl md:text-7xl text-ink leading-[1.05] tracking-tight mb-6">
               Canvas<span className="text-primary">&amp;</span>Code
             </h1>
             <p className="text-lg md:text-xl text-body leading-relaxed mb-8 max-w-lg">
@@ -127,18 +118,18 @@ export default function Home() {
           </div>
           <Link
             to={`/post/${featured.slug}`}
-            className="group block rounded-xl overflow-hidden transition-all duration-300 hover:border-primary/20 bg-surface-soft border border-hairline"
+            className="group block rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/8 hover:-translate-y-0.5 bg-surface-soft border border-hairline"
           >
             <div className="relative overflow-hidden h-64">
               {featured.coverImage && !coverError ? (
                 <img
                   src={featured.coverImage}
                   alt={ft.title}
-                  className="w-full h-full object-cover transition-transform duration-700 ease-editorial group-hover:scale-[1.03]"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   onError={() => setCoverError(true)}
                 />
               ) : (
-                <div className="w-full h-full bg-gradient-to-br from-primary/20 via-accent-teal/10 to-accent-amber/15 flex items-center justify-center transition-transform duration-700 ease-editorial group-hover:scale-[1.03]">
+                <div className="w-full h-full bg-gradient-to-br from-primary/20 via-accent-teal/10 to-accent-amber/15 flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
                   <span className="font-display text-6xl text-primary/30 select-none">
                     {ft.title.charAt(0).toUpperCase()}
                   </span>
