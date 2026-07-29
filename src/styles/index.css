@@ -529,3 +529,24 @@
   margin-right: 0.3rem;
   color: var(--color-primary);
 }
+
+/* ── CJK Editorial Rules ─────────────────────────────── */
+.post-content {
+  line-break: strict;
+  word-break: normal;
+  overflow-wrap: break-word;
+  hanging-punctuation: first allow-end;
+}
+:lang(zh) h1, :lang(zh) h2, :lang(zh) h3,
+:lang(zh) .font-display { letter-spacing: 0.015em; }
+:lang(zh) .pull-quote p {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 1.125rem;
+}
+:lang(zh) .post-content.drop-cap > p:first-of-type::first-letter {
+  line-height: 0.86;
+  padding: 0.06em 0.12em 0 0;
+  font-weight: 700;
+}
+.dark img.cover { filter: brightness(0.92) saturate(0.85); }

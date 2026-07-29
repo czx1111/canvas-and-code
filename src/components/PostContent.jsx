@@ -241,7 +241,7 @@ export default function PostContent({ content, dropCap = false }) {
           h2: ({ children }) => {
             const id = slugify(extractTextFromChildren(children));
             return (
-              <h2 id={id} className="font-display text-2xl md:text-3xl font-semibold text-ink mt-xl mb-md leading-tight scroll-mt-20">
+              <h2 id={id} className="font-display text-h2 font-semibold text-ink mt-xxl mb-md leading-tight scroll-mt-20">
                 {children}
               </h2>
             );
@@ -249,18 +249,18 @@ export default function PostContent({ content, dropCap = false }) {
           h3: ({ children }) => {
             const id = slugify(extractTextFromChildren(children));
             return (
-              <h3 id={id} className="font-display text-xl md:text-2xl font-semibold text-ink mt-lg mb-sm leading-tight scroll-mt-20">
+              <h3 id={id} className="font-display text-h3 font-semibold text-ink mt-xl mb-sm leading-tight scroll-mt-20">
                 {children}
               </h3>
             );
           },
           h4: ({ children }) => (
-            <h4 className="font-display text-lg font-semibold text-ink mt-md mb-xs leading-tight">
+            <h4 className="font-display text-h4 font-semibold text-ink mt-lg mb-xs leading-tight">
               {children}
             </h4>
           ),
           p: ({ children }) => (
-            <p className="text-body leading-[1.8] mb-md text-[15px]">
+            <p className="text-body text-prose mb-lg">
               {transformSidenotes(children, nextSidenoteNum)}
             </p>
           ),
@@ -284,12 +284,12 @@ export default function PostContent({ content, dropCap = false }) {
             );
           },
           ul: ({ children }) => (
-            <ul className="list-disc list-outside ml-lg mb-md space-y-xs text-body leading-[1.8] text-[15px] marker:text-primary">
+            <ul className="list-disc list-outside ml-lg mb-lg space-y-xs text-body text-prose marker:text-primary">
               {children}
             </ul>
           ),
           ol: ({ children }) => (
-            <ol className="list-decimal list-outside ml-lg mb-md space-y-xs text-body leading-[1.8] text-[15px] marker:text-primary marker:font-semibold">
+            <ol className="list-decimal list-outside ml-lg mb-lg space-y-xs text-body text-prose marker:text-primary marker:font-semibold">
               {children}
             </ol>
           ),

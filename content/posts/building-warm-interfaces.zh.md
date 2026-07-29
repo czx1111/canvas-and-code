@@ -5,6 +5,7 @@ excerpt: "印刷编辑传统——温暖的纸张色调、衬线标题、宽裕�
 category: Design
 date: 2026-07-23
 readTime: 6 分钟
+coverImage: /covers/building-warm-interfaces.webp
 ---
 
 ## 温暖感的问题

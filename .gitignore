@@ -15,3 +15,14 @@ public/robots.txt
 public/covers/
 .workbuddy
 
+# Temp build/test artifacts
+.build-*
+.build-check.txt
+.build-exit.txt
+.build-log.txt
+.smoke*
+.verify.cjs
+
+# Design docs & specs (keep in project but not tracked)
+OVERVIEW.md
+design/

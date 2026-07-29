@@ -7,7 +7,7 @@ excerptZh: "超越 useState 和 useEffect——那些在生产级 React 应用�
 category: Engineering
 date: 2026-07-23
 readTime: 7 min
-coverImage: ""
+coverImage: /covers/react-hooks-in-practice.webp
 featured: false
 series: craft-of-code
 seriesOrder: 3

@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <title>Canvas &amp; Code</title>
-  <rect width="64" height="64" rx="14" fill="#cc785c"/>
-  <path d="M 42.3 21.7 A 15 15 0 1 0 42.3 42.3" fill="none" stroke="#faf9f5" stroke-width="7" stroke-linecap="round"/>
-  <rect x="44" y="40" width="12" height="4.8" rx="2.4" fill="#e8a55a"/>
+  <rect width="256" height="256" rx="56" fill="#cc785c"/>
+  <path d="M178.1 68.3 A78 78 0 1 0 178.1 187.7" fill="none" stroke="#faf9f5" stroke-width="30" stroke-linecap="round"/>
+  <circle cx="206" cy="128" r="12" fill="#e8a55a"/>
 </svg>

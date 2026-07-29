@@ -87,7 +87,7 @@ export default function PostDetail() {
           {viewCount} {lang === "zh" ? "次阅读" : "views"}
         </span>
       </div>
-      <h1 className="font-display text-4xl md:text-5xl text-ink leading-tight tracking-tight mb-4">
+      <h1 className="font-display text-h1 md:text-display text-ink mb-4">
         {title}
       </h1>
       <div className="flex items-center gap-4">
@@ -105,16 +105,16 @@ export default function PostDetail() {
   );
 
   const coverImage = post.coverImage && !coverError ? (
-    <div className="rounded-xl overflow-hidden mb-10 border border-hairline">
+    <div className="rounded-xl overflow-hidden mb-10 border border-hairline aspect-[2.4/1]">
       <img
         src={post.coverImage}
         alt={title}
-        className="w-full h-64 md:h-80 object-cover"
+        className="w-full h-full object-cover cover"
         onError={() => setCoverError(true)}
       />
     </div>
   ) : coverError ? (
-    <div className="rounded-xl overflow-hidden mb-10 border border-hairline h-64 md:h-80 bg-surface-soft flex flex-col items-center justify-center gap-2 text-muted">
+    <div className="rounded-xl overflow-hidden mb-10 border border-hairline aspect-[2.4/1] bg-surface-soft flex flex-col items-center justify-center gap-2 text-muted">
       <ImageIcon className="w-8 h-8" />
       <span className="text-sm">{lang === "zh" ? "封面图加载失败" : "Cover image failed to load"}</span>
     </div>

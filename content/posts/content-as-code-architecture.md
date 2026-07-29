@@ -7,7 +7,7 @@ excerptZh: "如何将博客文章视为版本控制的 Markdown 文件，消除�
 category: Engineering
 date: 2026-07-23
 readTime: 8 min
-coverImage: ""
+coverImage: /covers/content-as-code-architecture.webp
 featured: false
 series: craft-of-code
 seriesOrder: 2

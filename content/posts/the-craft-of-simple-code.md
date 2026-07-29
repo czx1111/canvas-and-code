@@ -7,7 +7,7 @@ excerptZh: "为什么最好的代码不是聪明的代码，以及如何抵制�
 category: Thoughts
 date: 2026-07-23
 readTime: 5 min
-coverImage: ""
+coverImage: /covers/the-craft-of-simple-code.webp
 featured: false
 series: craft-of-code
 seriesOrder: 1

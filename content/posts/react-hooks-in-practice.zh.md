@@ -5,6 +5,7 @@ excerpt: "超越 useState 和 useEffect——那些在生产级 React 应用中�
 category: Engineering
 date: 2026-07-23
 readTime: 7 分钟
+coverImage: /covers/react-hooks-in-practice.webp
 ---
 
 ## 超越基础
