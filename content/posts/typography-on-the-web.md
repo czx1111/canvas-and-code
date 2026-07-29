@@ -7,7 +7,7 @@ excerptZh: "从字体加载到垂直节奏——那些区分业余网站与专�
 category: Design
 date: 2026-07-23
 readTime: 6 min
-coverImage: /covers/typography-on-the-web.webp
+coverImage: ""
 featured: false
 ---
 

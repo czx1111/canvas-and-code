@@ -7,7 +7,7 @@ excerptZh: "AI 可以生成文字，但它能写作吗？关于创造力、工�
 category: Thoughts
 date: 2026-07-23
 readTime: 5 min
-coverImage: /covers/thoughts-on-ai-and-craft.webp
+coverImage: ""
 featured: false
 ---
 

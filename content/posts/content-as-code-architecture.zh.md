@@ -5,7 +5,7 @@ excerpt: "如何将博客文章视为版本控制的 Markdown 文件，消除后
 category: Engineering
 date: 2026-07-23
 readTime: 8 分钟
-coverImage: /covers/content-as-code-architecture.webp
+coverImage: ""
 ---
 
 ## 博客后端的问题
