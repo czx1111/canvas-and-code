@@ -180,7 +180,7 @@ export default function Navbar({ onSearchOpen }) {
       {/* Mobile Menu */}
       <div
         className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out border-hairline bg-canvas ${
-          mobileOpen ? "max-h-96 opacity-100 border-t" : "max-h-0 opacity-0"
+          mobileOpen ? "max-h-[32rem] opacity-100 border-t" : "max-h-0 opacity-0"
         }`}
       >
         <div className="max-w-5xl mx-auto px-6 py-4 flex flex-col gap-1">
