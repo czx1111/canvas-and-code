@@ -1,6 +1,6 @@
 ---
 slug: pv-operations-and-process-synchronization
-title: "PV 操作与进程同步：从原理到经典问题"
+title: "PV 操作：从原理到经典问题"
 category: OS
 date: 2026-07-28
 readTime: 15 min
