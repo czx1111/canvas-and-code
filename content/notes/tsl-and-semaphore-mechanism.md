@@ -1,6 +1,6 @@
 ---
-slug: tsl-and-semaphore-mechanism
-title: "TSL 自旋锁与信号量 PV：硬件争抢与操作系统排队的底层逻辑"
+slug: tsl-and-semaphore-and-Monitor
+title: "TSL 自旋锁与信号量 PV 与Monitor 管程"
 category: OS
 date: 2026-07-30
 readTime: 8 min
