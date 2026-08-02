@@ -8,7 +8,7 @@ export default function NotFound() {
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-24 text-center">
-      <SEO title="404" description="Page not found" />
+      <SEO title="404" description="Page not found" noindex />
       <p className="font-display text-7xl md:text-8xl text-primary mb-4">404</p>
       <p className="font-display text-2xl text-ink mb-2">
         {lang === "zh" ? "页面走丢了" : "Page not found"}

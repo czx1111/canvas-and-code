@@ -41,6 +41,7 @@ export default function PostDetail() {
   if (!post) {
     return (
       <div className="max-w-3xl mx-auto px-6 py-20 text-center">
+        <SEO title="404" description="Post not found" noindex />
         <p className="font-display text-2xl text-ink mb-2">404</p>
         <p className="text-muted mb-8">Post not found.</p>
         <Link to="/blog" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary text-white font-medium text-sm hover:bg-primary-active transition-colors">
@@ -97,7 +98,7 @@ export default function PostDetail() {
           </div>
           <div>
             <p className="text-sm font-medium text-ink">{lang === "zh" ? "作者" : "Author"}</p>
-            <time className="text-xs text-muted">{formatDate(post.date, lang)}</time>
+            <time dateTime={post.date} className="text-xs text-muted">{formatDate(post.date, lang)}</time>
           </div>
         </div>
       </div>
@@ -180,7 +181,14 @@ export default function PostDetail() {
       category={post.category}
       seriesId={post.series}
     >
-      <SEO title={title} description={post.excerpt} ogType="article" ogImage={post.coverImage} />
+      <SEO
+        title={title}
+        description={post.excerpt}
+        keywords={`${post.category}, ${post.titleZh || post.title}`}
+        ogType="article"
+        ogImage={post.coverImage}
+        publishedTime={post.date}
+      />
     </ArticleLayout>
   );
 }

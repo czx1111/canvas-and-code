@@ -35,18 +35,22 @@ export function prerenderMetaPlugin({
   // URLs use trailing slashes: GitHub Pages serves directories at the
   // slash-suffixed URL (301 from the bare path), so canonical = final URL.
   const staticRoutes = [
-    { path: "/", url: "/", title: "", description: defaultDescription },
-    { path: "/blog", url: "/blog/", title: "Blog", description: "Thoughts on code, design, creativity, and the things in between." },
-    { path: "/notes", url: "/notes/", title: "Notes", description: "A collection of knowledge points, insights, and quick thoughts organized by topic." },
-    { path: "/tags", url: "/tags/", title: "Tags", description: "Browse all posts and notes by tag" },
-    { path: "/series", url: "/series/", title: "Series", description: "Ongoing article series by topic" },
-    { path: "/links", url: "/links/", title: "Friend Links", description: "Blogs I admire and friends" },
-    { path: "/guestbook", url: "/guestbook/", title: "Guestbook", description: "Leave your footprints here" },
-    { path: "/about", url: "/about/", title: "About", description: "A little about who I am and why I write." },
-    { path: "/archive", url: "/archive/", title: "Archive", description: "Timeline archive of all posts and notes" },
-    { path: "/projects", url: "/projects/", title: "Projects", description: "My personal projects and open-source work" },
-    { path: "/changelog", url: "/changelog/", title: "Changelog", description: "Site feature iterations and update history" },
+    { path: "/", url: "/", title: "", description: defaultDescription, keywords: "" },
+    { path: "/blog", url: "/blog/", title: "Blog", description: "Thoughts on code, design, creativity, and the things in between.", keywords: "blog, articles, 博客, 文章" },
+    { path: "/notes", url: "/notes/", title: "Notes", description: "A collection of knowledge points, insights, and quick thoughts organized by topic.", keywords: "notes, snippets, 随笔, 笔记" },
+    { path: "/tags", url: "/tags/", title: "Tags", description: "Browse all posts and notes by tag", keywords: "tags, topics, 标签" },
+    { path: "/series", url: "/series/", title: "Series", description: "Ongoing article series by topic", keywords: "series, 专栏, 系列文章" },
+    { path: "/links", url: "/links/", title: "Friend Links", description: "Blogs I admire and friends", keywords: "friend links, blogroll, 友情链接" },
+    { path: "/guestbook", url: "/guestbook/", title: "Guestbook", description: "Leave your footprints here", keywords: "guestbook, 留言板" },
+    { path: "/about", url: "/about/", title: "About", description: "A little about who I am and why I write.", keywords: "about, 关于" },
+    { path: "/archive", url: "/archive/", title: "Archive", description: "Timeline archive of all posts and notes", keywords: "archive, timeline, 归档" },
+    { path: "/projects", url: "/projects/", title: "Projects", description: "My personal projects and open-source work", keywords: "projects, open source, 项目, 开源" },
+    { path: "/changelog", url: "/changelog/", title: "Changelog", description: "Site feature iterations and update history", keywords: "changelog, updates, 更新日志" },
   ];
+
+  // Fallback OG image (site brand cover) and site-wide keywords.
+  const defaultOgImage = `${base}/og-cover.png`;
+  const siteKeywords = "Canvas & Code, blog, web development, frontend, design, React, engineering, 博客, 前端, 设计";
 
   // ── Helpers ─────────────────────────────────────────────
 
@@ -102,13 +106,16 @@ export function prerenderMetaPlugin({
    * @param {string} m.title — page title without site name ("" for home)
    * @param {string} m.description
    * @param {string} m.url — absolute canonical URL
+   * @param {string} [m.keywords] — page-specific keywords (prepended to site defaults)
    * @param {string} [m.type] — og:type ("website" | "article")
-   * @param {string} [m.image] — absolute og:image URL
+   * @param {string} [m.image] — absolute og:image URL (falls back to site cover)
    * @param {string} [m.publishedTime] — ISO date for article:published_time
    */
-  function buildMeta({ title, description, url, type = "website", image = "", publishedTime = "" }) {
+  function buildMeta({ title, description, keywords = "", url, type = "website", image = "", publishedTime = "" }) {
     const fullTitle = title ? `${title} — ${siteName}` : siteName;
     const desc = description || defaultDescription;
+    const img = image || defaultOgImage;
+    const kw = keywords ? `${keywords}, ${siteKeywords}` : siteKeywords;
     const tags = [
       `<link rel="canonical" href="${escapeHtml(url)}" />`,
       `<meta property="og:site_name" content="${escapeHtml(siteName)}" />`,
@@ -116,14 +123,16 @@ export function prerenderMetaPlugin({
       `<meta property="og:description" content="${escapeHtml(desc)}" />`,
       `<meta property="og:type" content="${type}" />`,
       `<meta property="og:url" content="${escapeHtml(url)}" />`,
+      `<meta property="og:image" content="${escapeHtml(img)}" />`,
+      `<meta property="og:locale" content="en_US" />`,
+      `<meta property="og:locale:alternate" content="zh_CN" />`,
     ];
-    if (image) tags.push(`<meta property="og:image" content="${escapeHtml(image)}" />`);
     if (publishedTime) tags.push(`<meta property="article:published_time" content="${escapeHtml(publishedTime)}" />`);
-    tags.push(`<meta name="twitter:card" content="${image ? "summary_large_image" : "summary"}" />`);
+    tags.push(`<meta name="twitter:card" content="summary_large_image" />`);
     tags.push(`<meta name="twitter:title" content="${escapeHtml(title || siteName)}" />`);
     tags.push(`<meta name="twitter:description" content="${escapeHtml(desc)}" />`);
-    if (image) tags.push(`<meta name="twitter:image" content="${escapeHtml(image)}" />`);
-    return { fullTitle, desc, tags };
+    tags.push(`<meta name="twitter:image" content="${escapeHtml(img)}" />`);
+    return { fullTitle, desc, kw, tags };
   }
 
   /** Inject meta into the built index.html template. */
@@ -136,6 +145,10 @@ export function prerenderMetaPlugin({
     html = html.replace(
       /<meta\s+name="description"\s+content="[^"]*"\s*\/?>/,
       `<meta name="description" content="${escapeHtml(meta.desc)}" />`
+    );
+    html = html.replace(
+      /<meta\s+name="keywords"\s+content="[^"]*"\s*\/?>/,
+      `<meta name="keywords" content="${escapeHtml(meta.kw)}" />`
     );
     const allTags = [...meta.tags, ...extraHeadTags];
     // Escape "<" in JSON-LD so a "</script>" sequence in content can't break out
@@ -175,10 +188,21 @@ export function prerenderMetaPlugin({
 
       let count = 0;
 
+      // WebSite JSON-LD on the home page helps search engines understand the
+      // site entity (name, URL, languages) for rich results.
+      const websiteJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: siteName,
+        url: `${base}/`,
+        description: defaultDescription,
+        inLanguage: ["en", "zh-CN"],
+      };
+
       // Static routes
       for (const r of staticRoutes) {
         const meta = buildMeta({ ...r, url: `${base}${r.url}` });
-        writeRoute(r.path, renderPage(template, meta));
+        writeRoute(r.path, renderPage(template, meta, r.path === "/" ? websiteJsonLd : null));
         count++;
       }
 
@@ -191,6 +215,7 @@ export function prerenderMetaPlugin({
         const meta = buildMeta({
           title: post.title,
           description: desc,
+          keywords: [post.category, post.titleZh].filter(Boolean).join(", "),
           url,
           type: "article",
           image,
@@ -201,8 +226,10 @@ export function prerenderMetaPlugin({
           "@type": "Article",
           headline: post.title,
           description: desc,
-          ...(image ? { image: [image] } : {}),
+          ...(image ? { image: [image] } : { image: [defaultOgImage] }),
           ...(post.date ? { datePublished: post.date } : {}),
+          ...(post.category ? { articleSection: post.category } : {}),
+          inLanguage: "en",
           mainEntityOfPage: url,
           author: { "@type": "Organization", name: siteName },
           publisher: { "@type": "Organization", name: siteName },
@@ -211,18 +238,31 @@ export function prerenderMetaPlugin({
         count++;
       }
 
-      // Note routes
+      // Note routes — with article JSON-LD (same schema as posts).
       for (const note of notes) {
         const url = `${base}/note/${note.slug}/`;
         const desc = truncate(stripMarkdown(note.content));
         const meta = buildMeta({
           title: note.title,
           description: desc,
+          keywords: [note.category, ...(note.tags || [])].filter(Boolean).join(", "),
           url,
           type: "article",
           publishedTime: note.date || "",
         });
-        writeRoute(`/note/${note.slug}`, renderPage(template, meta));
+        const jsonLd = {
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: note.title,
+          description: desc,
+          image: [defaultOgImage],
+          ...(note.date ? { datePublished: note.date } : {}),
+          ...(note.category ? { articleSection: note.category } : {}),
+          mainEntityOfPage: url,
+          author: { "@type": "Organization", name: siteName },
+          publisher: { "@type": "Organization", name: siteName },
+        };
+        writeRoute(`/note/${note.slug}`, renderPage(template, meta, jsonLd));
         count++;
       }
 

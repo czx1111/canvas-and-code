@@ -36,6 +36,7 @@ export default function NoteDetail() {
   if (!note) {
     return (
       <div className="max-w-3xl mx-auto px-6 py-20 text-center">
+        <SEO title="404" description="Note not found" noindex />
         <p className="font-display text-2xl text-ink mb-2">404</p>
         <p className="text-muted mb-8">
           {lang === "zh" ? "未找到这篇随笔。" : "Note not found."}
@@ -73,7 +74,7 @@ export default function NoteDetail() {
           <Eye className="w-3 h-3" />
           {viewCount} {lang === "zh" ? "次阅读" : "views"}
         </span>
-        <time className="text-xs text-muted">{formatDate(note.date, lang)}</time>
+        <time dateTime={note.date} className="text-xs text-muted">{formatDate(note.date, lang)}</time>
       </div>
       <h1 className="font-display text-3xl md:text-4xl text-ink leading-tight tracking-tight mb-4">
         {title}
@@ -116,7 +117,12 @@ export default function NoteDetail() {
       currentSlug={note.slug}
       category={note.category}
     >
-      <SEO title={title} ogType="article" />
+      <SEO
+        title={title}
+        keywords={[note.category, ...(note.tags || [])].filter(Boolean).join(", ")}
+        ogType="article"
+        publishedTime={note.date}
+      />
     </ArticleLayout>
   );
 }
