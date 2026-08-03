@@ -8,28 +8,31 @@ export default {
   theme: {
     extend: {
       colors: {
+        /* CSS-var colors MUST use rgb(var(--x-rgb) / <alpha-value>) so that
+           opacity modifiers (bg-primary/10, bg-canvas/80…) actually compile —
+           plain "var(--x)" strings are silently dropped by Tailwind v3. */
         primary: {
-          DEFAULT: "var(--color-primary)",
-          active: "var(--color-primary-active)",
-          disabled: "var(--color-primary-disabled)",
+          DEFAULT: "rgb(var(--color-primary-rgb) / <alpha-value>)",
+          active: "rgb(var(--color-primary-active-rgb) / <alpha-value>)",
+          disabled: "rgb(var(--color-primary-disabled-rgb) / <alpha-value>)",
         },
-        ink: "var(--color-ink)",
+        ink: "rgb(var(--color-ink-rgb) / <alpha-value>)",
         body: {
-          DEFAULT: "var(--color-body)",
-          strong: "var(--color-body-strong)",
+          DEFAULT: "rgb(var(--color-body-rgb) / <alpha-value>)",
+          strong: "rgb(var(--color-body-strong-rgb) / <alpha-value>)",
         },
         muted: {
-          DEFAULT: "var(--color-muted)",
-          soft: "var(--color-muted-soft)",
+          DEFAULT: "rgb(var(--color-muted-rgb) / <alpha-value>)",
+          soft: "rgb(var(--color-muted-soft-rgb) / <alpha-value>)",
         },
         hairline: {
-          DEFAULT: "var(--color-hairline)",
-          soft: "var(--color-hairline-soft)",
+          DEFAULT: "rgb(var(--color-hairline-rgb) / <alpha-value>)",
+          soft: "rgb(var(--color-hairline-soft-rgb) / <alpha-value>)",
         },
-        canvas: "var(--color-canvas)",
+        canvas: "rgb(var(--color-canvas-rgb) / <alpha-value>)",
         surface: {
-          soft: "var(--color-surface-soft)",
-          card: "var(--color-surface-card)",
+          soft: "rgb(var(--color-surface-soft-rgb) / <alpha-value>)",
+          card: "rgb(var(--color-surface-card-rgb) / <alpha-value>)",
           "cream-strong": "#e8e0d2",
           dark: "#181715",
           "dark-elevated": "#252320",

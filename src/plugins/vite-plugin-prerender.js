@@ -27,7 +27,9 @@ export function prerenderMetaPlugin({
   defaultDescription = "Canvas & Code — A blog about engineering, design, and the craft of building things with warmth and intention.",
 } = {}) {
   const root = process.cwd();
-  const distDir = path.resolve(root, "dist");
+  // Resolved from Vite config in configResolved so `--outDir` is respected
+  // (was hardcoded to "dist", which polluted the real dist/ on custom outDir builds).
+  let distDir = path.resolve(root, "dist");
   const base = siteUrl.replace(/\/$/, "");
 
   // Meta for static routes — mirrors the <SEO> props used by each page
@@ -175,6 +177,9 @@ export function prerenderMetaPlugin({
   return {
     name: "prerender-meta",
     apply: "build",
+    configResolved(config) {
+      distDir = path.resolve(root, config.build.outDir);
+    },
     async closeBundle() {
       const templatePath = path.join(distDir, "index.html");
       if (!fs.existsSync(templatePath)) {

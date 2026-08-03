@@ -118,7 +118,7 @@ export default function Home() {
           </div>
           <Link
             to={`/post/${featured.slug}`}
-            className="group block rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/8 hover:-translate-y-0.5 bg-surface-soft border border-hairline"
+            className="group block rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-0.5 bg-surface-soft border border-hairline"
           >
             <div className="relative overflow-hidden h-64">
               {featured.coverImage && !coverError ? (
