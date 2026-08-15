@@ -15,5 +15,5 @@ jobs:
           curl -s -X POST \
             -H "Content-Type: application/json" \
             -d '{"event":"GET_COMMENT_META"}' \
-            "https://xdcr.ccwu.cc/" \
+            "https://twikoo.xdcr.de5.net/" \
             -o /dev/null -w "HTTP %{http_code} | %{time_total}s\n"
