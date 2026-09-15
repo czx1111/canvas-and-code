@@ -35,7 +35,8 @@ export default function Blog() {
           p.title.toLowerCase().includes(q) ||
           p.excerpt.toLowerCase().includes(q) ||
           (p.titleZh && p.titleZh.includes(q)) ||
-          (p.excerptZh && p.excerptZh.includes(q))
+          (p.excerptZh && p.excerptZh.includes(q)) ||
+          ((p.content || "").toLowerCase().includes(q) || (p.contentZh || "").toLowerCase().includes(q))
       );
     }
     return result;

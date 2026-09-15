@@ -33,7 +33,9 @@ export default function Notes() {
         (n) =>
           n.title.toLowerCase().includes(q) ||
           (n.titleZh && n.titleZh.includes(q)) ||
-          n.tags.some((tag) => tag.toLowerCase().includes(q))
+          n.tags.some((tag) => tag.toLowerCase().includes(q)) ||
+          (n.content || "").toLowerCase().includes(q) ||
+          (n.contentZh || "").toLowerCase().includes(q)
       );
     }
     return result;

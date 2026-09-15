@@ -3,15 +3,17 @@ import path from "path";
 import { pathToFileURL } from "url";
 
 /**
- * Vite plugin: generates an RSS 2.0 feed (feed.xml) from posts-data.js
- * at build time. The feed is placed in the public/ directory so it's
- * copied to the dist root during build.
+ * Vite plugin: generates an RSS 2.0 feed (feed.xml) from posts-data.js and
+ * notes-data.js at build time. The feed is placed in the public/ directory
+ * so it's copied to the dist root during build.
  *
  * Also generates a feed.xml in the project root's public/ folder
  * during dev server startup for local testing.
  *
- * Post data is loaded via dynamic import() of the generated ESM data file
- * (with cache-busting query) — no fragile regex parsing of our own output.
+ * Both content types are merged by date (newest first) so feed readers
+ * see notes as well as blog posts. Item data is loaded via dynamic
+ * import() of the generated ESM data files (with cache-busting query) —
+ * no fragile regex parsing of our own output.
  */
 export function rssFeedPlugin() {
   const SITE_TITLE = "Canvas & Code";
@@ -19,6 +21,7 @@ export function rssFeedPlugin() {
     "Thoughts on engineering, design, and the craft of building things with warmth and intention.";
   const SITE_URL = "https://xdcr.de5.net";
   const postsDataPath = path.resolve(process.cwd(), "src/generated/posts-data.js");
+  const notesDataPath = path.resolve(process.cwd(), "src/generated/notes-data.js");
   const outputPath = path.resolve(process.cwd(), "public/feed.xml");
 
   function escapeXml(str) {
@@ -44,16 +47,43 @@ export function rssFeedPlugin() {
       .trim();
   }
 
-  /** Load the generated posts ESM data file (cache-busted on every call). */
-  async function loadPosts() {
-    if (!fs.existsSync(postsDataPath)) return [];
+  /** Make text safe inside a CDATA section (breaks any "]]>" sequence). */
+  function cdataSafe(str) {
+    if (!str) return "";
+    return String(str).replace(/\]\]>/g, "]]]]><![CDATA[>");
+  }
+
+  /** Load a generated ESM data file (cache-busted on every call). */
+  async function loadData(filePath, exportName) {
+    if (!fs.existsSync(filePath)) return [];
     try {
-      const mod = await import(`${pathToFileURL(postsDataPath).href}?t=${Date.now()}`);
-      return Array.isArray(mod.posts) ? mod.posts : [];
+      const mod = await import(`${pathToFileURL(filePath).href}?t=${Date.now()}`);
+      return Array.isArray(mod[exportName]) ? mod[exportName] : [];
     } catch (err) {
-      console.warn(`[rss-feed] Failed to load posts-data.js: ${err.message}`);
+      console.warn(`[rss-feed] Failed to load ${path.basename(filePath)}: ${err.message}`);
       return [];
     }
+  }
+
+  /**
+   * Merge posts and notes into a single list ordered by date (newest first).
+   * Items without a date sort first (treated as freshly added), mirroring
+   * how the sitemap and archive handle dating.
+   */
+  async function loadAllItems() {
+    const [posts, notes] = await Promise.all([
+      loadData(postsDataPath, "posts"),
+      loadData(notesDataPath, "notes"),
+    ]);
+
+    const postItems = posts.map((post) => ({ ...post, __feedType: "post" }));
+    const noteItems = notes.map((note) => ({ ...note, __feedType: "note" }));
+
+    return [...postItems, ...noteItems].sort((a, b) => {
+      if (!a.date && b.date) return -1;
+      if (a.date && !b.date) return 1;
+      return new Date(b.date || 0) - new Date(a.date || 0);
+    });
   }
 
   async function generateFeed() {
@@ -62,32 +92,41 @@ export function rssFeedPlugin() {
       return;
     }
 
-    const posts = await loadPosts();
+    const items = await loadAllItems();
 
-    if (posts.length === 0) {
-      console.log("[rss-feed] No posts found, skipping feed generation.");
+    if (items.length === 0) {
+      console.log("[rss-feed] No posts or notes found, skipping feed generation.");
       return;
     }
 
     const now = new Date().toUTCString();
 
-    let items = "";
-    for (const post of posts) {
-      const pubDate = post.date
-        ? new Date(post.date).toUTCString()
+    let itemXml = "";
+    for (const item of items) {
+      const isPost = item.__feedType === "post";
+      const linkPath = isPost ? `/post/${item.slug}` : `/note/${item.slug}`;
+      const pubDate = item.date
+        ? new Date(item.date).toUTCString()
         : now;
-      const description = escapeXml(stripMarkdown(post.excerpt || ""));
-      const content = escapeXml(stripMarkdown(post.content || "").substring(0, 500)) + "...";
+      const description = escapeXml(stripMarkdown(item.excerpt || item.content || "").slice(0, 300));
+      const content = escapeXml(stripMarkdown(item.content || "").slice(0, 1000));
 
-      items += `    <item>
-      <title>${escapeXml(post.title)}</title>
-      <link>${SITE_URL}/post/${escapeXml(post.slug)}/</link>
-      <guid isPermaLink="true">${SITE_URL}/post/${escapeXml(post.slug)}/</guid>
+      let categoryXml = "";
+      if (isPost && item.category) {
+        categoryXml += `      <category>${escapeXml(item.category)}</category>\n`;
+      }
+      for (const tag of item.tags || []) {
+        categoryXml += `      <category>${escapeXml(tag)}</category>\n`;
+      }
+
+      itemXml += `    <item>
+      <title>${escapeXml(item.title)}</title>
+      <link>${SITE_URL}${linkPath}/</link>
+      <guid isPermaLink="true">${SITE_URL}${linkPath}/</guid>
       <pubDate>${pubDate}</pubDate>
       <description>${description}</description>
-      <content:encoded><![CDATA[${stripMarkdown(post.content || "").substring(0, 1000)}...]]></content:encoded>
-      <category>${escapeXml(post.category || "Thoughts")}</category>
-    </item>
+      <content:encoded><![CDATA[${cdataSafe(stripMarkdown(item.content || "").slice(0, 1000))}]]></content:encoded>
+${categoryXml}    </item>
 `;
     }
 
@@ -104,7 +143,7 @@ export function rssFeedPlugin() {
     <language>en-us</language>
     <lastBuildDate>${now}</lastBuildDate>
     <atom:link href="${SITE_URL}/feed.xml" rel="self" type="application/rss+xml" />
-${items}  </channel>
+${itemXml}  </channel>
 </rss>`;
 
     // Ensure public/ directory exists
@@ -114,25 +153,28 @@ ${items}  </channel>
     }
 
     fs.writeFileSync(outputPath, feed, "utf-8");
-    console.log(`[rss-feed] Generated feed.xml with ${posts.length} posts → ${path.relative(process.cwd(), outputPath)}`);
+    console.log(`[rss-feed] Generated feed.xml with ${items.length} items (posts + notes) → ${path.relative(process.cwd(), outputPath)}`);
   }
 
   return {
     name: "rss-feed",
     // buildStart hooks run sequentially in plugin order, so blog-content
-    // has already written posts-data.js when this plugin runs.
+    // has already written the data files when this plugin runs.
     async buildStart() {
       await generateFeed();
     },
     configureServer(server) {
       generateFeed();
-      // Watch posts-data.js for changes
-      const watcher = fs.watch(postsDataPath, () => {
-        console.log("[rss-feed] posts-data.js changed, regenerating feed...");
-        generateFeed();
-      });
+      // Watch both generated data files for changes
+      const watchPaths = [postsDataPath, notesDataPath].filter((p) => fs.existsSync(p));
+      const watchers = watchPaths.map((p) =>
+        fs.watch(p, () => {
+          console.log(`[rss-feed] ${path.basename(p)} changed, regenerating feed...`);
+          generateFeed();
+        })
+      );
       server.httpServer.on("close", () => {
-        watcher.close();
+        watchers.forEach((w) => w.close());
       });
     },
   };
